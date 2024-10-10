@@ -1,2 +1,3 @@
 .venv
 npins/default.nix
+**/__pycache__
