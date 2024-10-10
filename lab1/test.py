@@ -18,15 +18,15 @@ class TestBruteFroce(unittest.TestCase):
 
   def test_lecture_min(self):
     f = self.f_lecture
-    real_xy = (0.5825, 0.66750)
+    real_xy = Point(x=0.5825, y=0.66750)
     eps = 0.1
 
     actual_xy = brute_force(f=f, a=0, b=1, eps=eps)
 
-    atol = get_y_abs_tol(f=f, x=real_xy[0], eps=eps)
+    atol = get_y_abs_tol(f=f, x=real_xy.x, eps=eps)
 
-    self.assertTrue(math.isclose(a=actual_xy[0], b=real_xy[0], abs_tol=eps))
-    self.assertTrue(math.isclose(a=actual_xy[1], b=real_xy[1], abs_tol=atol))
+    self.assertTrue(math.isclose(a=actual_xy.x, b=real_xy.x, abs_tol=eps))
+    self.assertTrue(math.isclose(a=actual_xy.y, b=real_xy.y, abs_tol=atol))
 
   def test_lecture_all_points(self):
     expected_points = [
