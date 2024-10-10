@@ -94,7 +94,7 @@ class TestBitwiseSearch(unittest.TestCase):
     for i in range(len(expected_points)):
       with self.subTest(i=i):
         self.assertTrue(math.isclose(expected_points[i].x, actual_points[i].x))
-        self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_points[i].y, abs_tol=1e-2))
+        self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_points[i].y, abs_tol=1e-3))
 
 if __name__ == '__main__':
     unittest.main()
