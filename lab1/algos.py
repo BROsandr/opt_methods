@@ -1,10 +1,10 @@
 import numpy as np
-
+from utils import Point
 from typing import Callable, Any
 
 import math
 
-def brute_force(f: Callable[[Any], Any], a, b, eps)->tuple[Any, Any]:
+def brute_force(f: Callable[[Any], Any], a, b, eps)->Point:
   assert a <= b
   assert eps > 0
 
@@ -15,4 +15,4 @@ def brute_force(f: Callable[[Any], Any], a, b, eps)->tuple[Any, Any]:
 
   ind_min = np.argmin(y)
 
-  return (x[ind_min], y[ind_min])
+  return Point(x=x[ind_min], y=y[ind_min])
