@@ -34,14 +34,12 @@ def bitwise_search(f: Callable[[Any], Any], a, b, eps, get_init_delta=lambda: 0.
 
     f_curr = get_f(a)
     points[a] = f_curr
-    delta1_y = [f_curr]
 
     x = a + delta1
 
     while x <= b:
       f_next = get_f(x)
       points[x] = f_next
-      delta1_y.append(f_next)
       if f_curr <= f_next: break
       f_curr = f_next
       x += delta1
