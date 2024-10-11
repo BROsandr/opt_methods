@@ -26,31 +26,34 @@ def bitwise_search(f: Callable[[Any], Any], a, b, eps, get_init_delta=lambda: 0.
   points = {}
 
   while True:
-    delta1_x = np.arange(a, b + delta1, delta1)
-
     def get_f(x):
       if x in points:
         return points[x]
       else:
         return f(x)
 
-    delta1_y = [get_f(delta1_x[0])]
+    f_curr = get_f(a)
+    points[a] = f_curr
+    delta1_y = [f_curr]
+
+    x = a + delta1
 
     endpoint_min = True
-    for f_curr, f_next in zip(itertools.chain(delta1_y, (get_f(xi) for xi in delta1_x[1:-1])),
-                              (get_f(xi) for xi in delta1_x[1:])):
+    while x <= b:
+      f_next = get_f(x)
+      points[x] = f_next
       delta1_y.append(f_next)
       if f_curr <= f_next:
         endpoint_min = False
         break
+      f_curr = f_next
+      x += delta1
 
     if endpoint_min:
-      return Point(x=delta1_x[-1], y=delta1_y[-1])
+      return Point(x=x-delta1, y=f_curr)
 
     if abs(delta1) <= eps:
-      return Point(x=delta1_x[len(delta1_y)-2], y=delta1_y[-2])
-
-    points.update(dict(zip(delta1_x, delta1_y)))
+      return Point(x=x-delta1, y=f_curr)
 
     delta1 = -delta1 / 4
-    a, b = delta1_x[len(delta1_y)-1], a
+    a = x
