@@ -38,19 +38,13 @@ def bitwise_search(f: Callable[[Any], Any], a, b, eps, get_init_delta=lambda: 0.
 
     x = a + delta1
 
-    endpoint_min = True
     while x <= b:
       f_next = get_f(x)
       points[x] = f_next
       delta1_y.append(f_next)
-      if f_curr <= f_next:
-        endpoint_min = False
-        break
+      if f_curr <= f_next: break
       f_curr = f_next
       x += delta1
-
-    if endpoint_min:
-      return Point(x=x-delta1, y=f_curr)
 
     if abs(delta1) <= eps:
       return Point(x=x-delta1, y=f_curr)
