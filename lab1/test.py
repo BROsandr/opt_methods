@@ -96,5 +96,33 @@ class TestBitwiseSearch(unittest.TestCase):
         self.assertTrue(math.isclose(expected_points[i].x, actual_points[i].x))
         self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_points[i].y, abs_tol=1e-3))
 
+  def test_endpoint(self):
+    f = lambda x: -x
+    real_xy = Point(x=1, y=-1)
+    eps = 0.1
+
+    log_points = LogPointsWrap(f)
+    actual_xy = bitwise_search(f=log_points, a=0, b=1, eps=eps)
+
+    self.assertEqual(actual_xy.x, real_xy.x)
+    self.assertEqual(actual_xy.y, real_xy.y)
+
+    expected_points = [
+      Point(x=0.00, y=-0.00),
+      Point(x=0.25, y=-0.25),
+      Point(x=0.50, y=-0.50),
+      Point(x=0.75, y=-0.75),
+      Point(x=1.00, y=-1.00),
+    ]
+
+    actual_points = log_points.points
+
+    self.assertEqual(len(expected_points), len(actual_points))
+
+    for i in range(len(expected_points)):
+      with self.subTest(i=i):
+        self.assertEqual(expected_points[i].x, actual_points[i].x)
+        self.assertEqual(expected_points[i].y, actual_points[i].y)
+
 if __name__ == '__main__':
     unittest.main()
