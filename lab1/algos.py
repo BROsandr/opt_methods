@@ -44,6 +44,9 @@ def bitwise_search(f: Callable[[Any], Any], a, b, eps, get_init_delta=lambda: 0.
       f_curr = f_next
       x += delta1
 
+    if x > b:
+      return Point(x=b, y=f_curr)
+
     if abs(delta1) <= eps:
       return Point(x=x-delta1, y=f_curr)
 
