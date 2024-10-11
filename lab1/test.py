@@ -177,5 +177,17 @@ class TestDichotomy(unittest.TestCase):
         self.assertTrue(math.isclose(a=expected_points[i].x, b=actual_points[i].x, abs_tol=1e-3))
         self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_points[i].y, abs_tol=1e-3))
 
+class TestGoldenRatio(unittest.TestCase):
+  def test_lecture_min(self):
+    f = f_lecture
+    eps = 0.1
+
+    actual_xy = golden_ratio(f=f, a=0, b=1, eps=eps)
+
+    atol = get_y_abs_tol(f=f, x=LECTURE_MIN.x, eps=eps)
+
+    self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
+    self.assertTrue(math.isclose(a=actual_xy.y, b=LECTURE_MIN.y, abs_tol=atol))
+
 if __name__ == '__main__':
     unittest.main()

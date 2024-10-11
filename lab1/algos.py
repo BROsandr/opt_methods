@@ -78,3 +78,38 @@ def dichotomy(f: Callable[[Any], Any], a, b, eps)->Point:
   x_min = (a + b) / 2
 
   return Point(x=x_min, y=f(x_min))
+
+def golden_ratio(f: Callable[[Any], Any], a, b, eps)->Point:
+  assert a <= b
+  assert eps > 0
+
+  x1 = a + (3 - math.sqrt(5)) / 2 * (b - a)
+  x2 = a + (math.sqrt(5) - 1) / 2 * (b - a)
+
+  y1 = f(x1)
+  y2 = f(x2)
+
+  tau = (math.sqrt(5) - 1) / 2
+  eps_n = (b - a) / 2
+
+  while eps_n <= eps:
+    if y1 <= y2:
+      b = x2
+      x2 = x1
+      y2 = y1
+      x1 = b - tau * (b - a)
+
+      y1 = f(x1)
+    else:
+      a = x1
+      x1 = x2
+      y1 = y2
+      x2 = b - tau * (b - a)
+
+      y2 = f(x2)
+
+    eps_n = tau * eps_n
+
+  x_min = (a + b) / 2
+
+  return Point(x=x_min, y=f(x_min))
