@@ -124,5 +124,17 @@ class TestBitwiseSearch(unittest.TestCase):
         self.assertEqual(expected_points[i].x, actual_points[i].x)
         self.assertEqual(expected_points[i].y, actual_points[i].y)
 
+  def test_inf(self):
+    f = self.f_lecture
+    real_xy = Point(x=0.5825, y=0.66750)
+    eps = 0.1
+
+    actual_xy = bitwise_search(f=f, a=0, b=math.inf, eps=eps)
+
+    atol = get_y_abs_tol(f=f, x=real_xy.x, eps=eps)
+
+    self.assertTrue(math.isclose(a=actual_xy.x, b=real_xy.x, abs_tol=eps))
+    self.assertTrue(math.isclose(a=actual_xy.y, b=real_xy.y, abs_tol=atol))
+
 if __name__ == '__main__':
     unittest.main()
