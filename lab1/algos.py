@@ -52,3 +52,29 @@ def bitwise_search(f: Callable[[Any], Any], a, b, eps, get_init_delta=lambda: 0.
 
     delta1 = -delta1 / 4
     a = x
+
+def dichotomy(f: Callable[[Any], Any], a, b, eps)->Point:
+  assert a <= b
+  assert eps > 0
+
+  delta = eps / 5
+
+  while True:
+    x1 = (b + a - delta) / 2
+    x2 = (b + a + delta) / 2
+
+    y1 = f(x1)
+    y2 = f(x2)
+
+    if y1 <= y2:
+      b = x2
+    else:
+      a = x1
+
+    eps_n = (b - a) / 2
+
+    if eps_n <= eps: break
+
+  x_min = (a + b) / 2
+
+  return Point(x=x_min, y=f(x_min))
