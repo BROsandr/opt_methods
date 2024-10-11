@@ -136,5 +136,46 @@ class TestBitwiseSearch(unittest.TestCase):
     self.assertTrue(math.isclose(a=actual_xy.x, b=real_xy.x, abs_tol=eps))
     self.assertTrue(math.isclose(a=actual_xy.y, b=real_xy.y, abs_tol=atol))
 
+def f_lecture(x):
+  return x**4 + math.exp(-x)
+
+LECTURE_MIN = Point(x=0.5825, y=0.66750)
+
+class TestDichotomy(unittest.TestCase):
+  def test_lecture_min(self):
+    f = f_lecture
+    eps = 0.1
+
+    actual_xy = dichotomy(f=f, a=0, b=1, eps=eps)
+
+    atol = get_y_abs_tol(f=f, x=LECTURE_MIN.x, eps=eps)
+
+    self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
+    self.assertTrue(math.isclose(a=actual_xy.y, b=LECTURE_MIN.y, abs_tol=atol))
+
+  @unittest.expectedFailure
+  def test_lecture_all_points(self):
+    expected_points = [
+      Point(x=0.490, y=0.670),
+      Point(x=0.510, y=0.688),
+      Point(x=0.735, y=0.771),
+      Point(x=0.755, y=0.792),
+      Point(x=0.613, y=0.683),
+      Point(x=0.633, y=0.691),
+      Point(x=0.560, y=0.670),
+    ]
+
+    eps = 0.1
+    log_points = LogPointsWrap(f_lecture)
+    dichotomy(f=log_points, a=0, b=1, eps=eps)
+    actual_points = log_points.points
+
+    self.assertEqual(len(expected_points), len(actual_points))
+
+    for i in range(len(expected_points)):
+      with self.subTest(i=i):
+        self.assertTrue(math.isclose(a=expected_points[i].x, b=actual_points[i].x, abs_tol=1e-3))
+        self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_points[i].y, abs_tol=1e-3))
+
 if __name__ == '__main__':
     unittest.main()
