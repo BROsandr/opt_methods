@@ -11,6 +11,8 @@ def get_y_abs_tol(f: Callable, x, eps):
 
   return max(abs(y - f(x + eps)), abs(y - f(x - eps)))
 
+LECTURE_MIN = Point(x=0.52825, y=0.66750)
+
 class TestBruteFroce(unittest.TestCase):
   @staticmethod
   def f_lecture(x):
@@ -18,15 +20,14 @@ class TestBruteFroce(unittest.TestCase):
 
   def test_lecture_min(self):
     f = self.f_lecture
-    real_xy = Point(x=0.5825, y=0.66750)
     eps = 0.1
 
     actual_xy = brute_force(f=f, a=0, b=1, eps=eps)
 
-    atol = get_y_abs_tol(f=f, x=real_xy.x, eps=eps)
+    atol = get_y_abs_tol(f=f, x=LECTURE_MIN.x, eps=eps)
 
-    self.assertTrue(math.isclose(a=actual_xy.x, b=real_xy.x, abs_tol=eps))
-    self.assertTrue(math.isclose(a=actual_xy.y, b=real_xy.y, abs_tol=atol))
+    self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
+    self.assertTrue(math.isclose(a=actual_xy.y, b=LECTURE_MIN.y, abs_tol=atol))
 
   def test_lecture_all_points(self):
     expected_points = [
@@ -62,15 +63,14 @@ class TestBitwiseSearch(unittest.TestCase):
 
   def test_lecture_min(self):
     f = self.f_lecture
-    real_xy = Point(x=0.5825, y=0.66750)
     eps = 0.1
 
     actual_xy = bitwise_search(f=f, a=0, b=1, eps=eps)
 
-    atol = get_y_abs_tol(f=f, x=real_xy.x, eps=eps)
+    atol = get_y_abs_tol(f=f, x=LECTURE_MIN.x, eps=eps)
 
-    self.assertTrue(math.isclose(a=actual_xy.x, b=real_xy.x, abs_tol=eps))
-    self.assertTrue(math.isclose(a=actual_xy.y, b=real_xy.y, abs_tol=atol))
+    self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
+    self.assertTrue(math.isclose(a=actual_xy.y, b=LECTURE_MIN.y, abs_tol=atol))
 
   def test_lecture_all_points(self):
     expected_points = [
@@ -126,20 +126,18 @@ class TestBitwiseSearch(unittest.TestCase):
 
   def test_inf(self):
     f = self.f_lecture
-    real_xy = Point(x=0.5825, y=0.66750)
     eps = 0.1
 
     actual_xy = bitwise_search(f=f, a=0, b=math.inf, eps=eps)
 
-    atol = get_y_abs_tol(f=f, x=real_xy.x, eps=eps)
+    atol = get_y_abs_tol(f=f, x=LECTURE_MIN.x, eps=eps)
 
-    self.assertTrue(math.isclose(a=actual_xy.x, b=real_xy.x, abs_tol=eps))
-    self.assertTrue(math.isclose(a=actual_xy.y, b=real_xy.y, abs_tol=atol))
+    self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
+    self.assertTrue(math.isclose(a=actual_xy.y, b=LECTURE_MIN.y, abs_tol=atol))
 
 def f_lecture(x):
   return x**4 + math.exp(-x)
 
-LECTURE_MIN = Point(x=0.5825, y=0.66750)
 
 class TestDichotomy(unittest.TestCase):
   def test_lecture_min(self):
