@@ -113,3 +113,52 @@ def golden_ratio(f: Callable[[Any], Any], a, b, eps)->Point:
   x_min = (a + b) / 2
 
   return Point(x=x_min, y=f(x_min))
+
+def parabola(f: Callable[[Any], Any], a, b, eps)->Point:
+  assert a <= b
+  assert eps > 0
+
+  get_init_points = lambda: (0.25, 0.5, 0.75)
+
+  x1, x2, x3 = get_init_points()
+  assert x1 < x2 < x3
+
+  f1, f2, f3 = f(x1), f(x2), f(x3)
+  assert f1 >= f2 <= f3
+
+  old_x_min = None
+
+  while True:
+    a0 = f1
+    a1 = (f2 - f1) / (x2 - x1)
+    a2 = 1 / (x3 - x2) * ((f3 - f1) / (x3 - x1) - (f2 - f1) / (x2 - x1))
+
+    x_min = 1 / 2 * (x1 + x2 - a1 / a2)
+
+    if (old_x_min is not None) and (abs(old_x_min - x_min) <= eps): return Point(x=x_min, y=None)
+
+    f_min = f(x_min)
+
+    if x_min < x2:
+      if f_min >= f2:
+        x1 = x_min
+        f1 = f_min
+      else:
+        x3 = x2
+        f3 = f2
+        x2 = x_min
+        f2 = f_min
+
+    else:
+      if f_min < f2:
+        x1 = x2
+        f1 = f2
+        x2 = x_min
+        f2 = f_min
+      else:
+        x1 = x2
+        f1 = f2
+        x2 = x_min
+        f2 = f_min
+
+    old_x_min = x_min

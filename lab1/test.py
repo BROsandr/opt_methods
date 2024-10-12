@@ -189,5 +189,42 @@ class TestGoldenRatio(unittest.TestCase):
     self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
     self.assertTrue(math.isclose(a=actual_xy.y, b=LECTURE_MIN.y, abs_tol=atol))
 
+class TestParabola(unittest.TestCase):
+  def test_lecture_min(self):
+    f = f_lecture
+    eps = 0.025
+
+    actual_xy = parabola(f=f, a=0, b=1, eps=eps)
+
+    atol = get_y_abs_tol(f=f, x=LECTURE_MIN.x, eps=eps)
+
+    self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
+    self.assertIsNone(actual_xy.y)
+
+  def test_lecture_all_points(self):
+    expected_points = [
+      Point(x=0.2500, y=0.7827),
+      Point(x=0.5000, y=0.6690),
+      Point(x=0.7500, y=0.7888),
+      Point(x=0.4968, y=0.6694),
+      Point(x=0.5224, y=0.6676),
+      Point(x=0.5248, y=None),
+    ]
+
+    eps = 0.025
+    log_points = LogPointsWrap(f_lecture)
+    min_point = parabola(f=log_points, a=0, b=1, eps=eps)
+    actual_points = log_points.points + [min_point]
+
+    self.assertEqual(len(expected_points), len(actual_points))
+
+    for i in range(len(expected_points)-1):
+      with self.subTest(i=i):
+        self.assertTrue(math.isclose(expected_points[i].x, actual_points[i].x, abs_tol=1e-4))
+        self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_points[i].y, abs_tol=1e-4))
+
+    self.assertTrue(math.isclose(a=actual_points[-1].x, b=expected_points[-1].x, abs_tol=1e-4))
+    self.assertIsNone(actual_points[-1].y)
+
 if __name__ == '__main__':
     unittest.main()
