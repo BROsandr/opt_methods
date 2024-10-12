@@ -11,23 +11,25 @@ def get_y_abs_tol(f: Callable, x, eps):
 
   return max(abs(y - f(x + eps)), abs(y - f(x - eps)))
 
+def f_lecture(x):
+  return x**4 + math.exp(-x)
+
 LECTURE_MIN = Point(x=0.52825, y=0.66750)
 
+def test_lecture_min(test_obj, method: Callable, eps):
+  f = f_lecture
+  eps = 0.1
+
+  actual_xy = method(f=f, a=0, b=1, eps=eps)
+
+  atol = get_y_abs_tol(f=f, x=LECTURE_MIN.x, eps=eps)
+
+  test_obj.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
+  test_obj.assertTrue(math.isclose(a=actual_xy.y, b=LECTURE_MIN.y, abs_tol=atol))
+
 class TestBruteFroce(unittest.TestCase):
-  @staticmethod
-  def f_lecture(x):
-    return x**4 + math.exp(-x)
-
   def test_lecture_min(self):
-    f = self.f_lecture
-    eps = 0.1
-
-    actual_xy = brute_force(f=f, a=0, b=1, eps=eps)
-
-    atol = get_y_abs_tol(f=f, x=LECTURE_MIN.x, eps=eps)
-
-    self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
-    self.assertTrue(math.isclose(a=actual_xy.y, b=LECTURE_MIN.y, abs_tol=atol))
+    test_lecture_min(test_obj=self, method=brute_force, eps=0.1)
 
   def test_lecture_all_points(self):
     expected_points = [
@@ -45,7 +47,7 @@ class TestBruteFroce(unittest.TestCase):
     ]
 
     eps = 0.1
-    log_points = LogPointsWrap(self.f_lecture)
+    log_points = LogPointsWrap(f_lecture)
     brute_force(f=log_points, a=0, b=1, eps=eps)
     actual_points = log_points.points
 
@@ -57,20 +59,8 @@ class TestBruteFroce(unittest.TestCase):
         self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_points[i].y, abs_tol=1e-2))
 
 class TestBitwiseSearch(unittest.TestCase):
-  @staticmethod
-  def f_lecture(x):
-    return x**4 + math.exp(-x)
-
   def test_lecture_min(self):
-    f = self.f_lecture
-    eps = 0.1
-
-    actual_xy = bitwise_search(f=f, a=0, b=1, eps=eps)
-
-    atol = get_y_abs_tol(f=f, x=LECTURE_MIN.x, eps=eps)
-
-    self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
-    self.assertTrue(math.isclose(a=actual_xy.y, b=LECTURE_MIN.y, abs_tol=atol))
+    test_lecture_min(test_obj=self, method=bitwise_search, eps=0.1)
 
   def test_lecture_all_points(self):
     expected_points = [
@@ -85,7 +75,7 @@ class TestBitwiseSearch(unittest.TestCase):
     ]
 
     eps = 0.1
-    log_points = LogPointsWrap(self.f_lecture)
+    log_points = LogPointsWrap(f_lecture)
     bitwise_search(f=log_points, a=0, b=1, eps=eps)
     actual_points = log_points.points
 
@@ -125,7 +115,7 @@ class TestBitwiseSearch(unittest.TestCase):
         self.assertEqual(expected_points[i].y, actual_points[i].y)
 
   def test_inf(self):
-    f = self.f_lecture
+    f = f_lecture
     eps = 0.1
 
     actual_xy = bitwise_search(f=f, a=0, b=math.inf, eps=eps)
@@ -135,21 +125,10 @@ class TestBitwiseSearch(unittest.TestCase):
     self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
     self.assertTrue(math.isclose(a=actual_xy.y, b=LECTURE_MIN.y, abs_tol=atol))
 
-def f_lecture(x):
-  return x**4 + math.exp(-x)
-
 
 class TestDichotomy(unittest.TestCase):
   def test_lecture_min(self):
-    f = f_lecture
-    eps = 0.1
-
-    actual_xy = dichotomy(f=f, a=0, b=1, eps=eps)
-
-    atol = get_y_abs_tol(f=f, x=LECTURE_MIN.x, eps=eps)
-
-    self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
-    self.assertTrue(math.isclose(a=actual_xy.y, b=LECTURE_MIN.y, abs_tol=atol))
+    test_lecture_min(test_obj=self, method=dichotomy, eps=0.1)
 
   @unittest.expectedFailure
   def test_lecture_all_points(self):
@@ -177,15 +156,7 @@ class TestDichotomy(unittest.TestCase):
 
 class TestGoldenRatio(unittest.TestCase):
   def test_lecture_min(self):
-    f = f_lecture
-    eps = 0.1
-
-    actual_xy = golden_ratio(f=f, a=0, b=1, eps=eps)
-
-    atol = get_y_abs_tol(f=f, x=LECTURE_MIN.x, eps=eps)
-
-    self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
-    self.assertTrue(math.isclose(a=actual_xy.y, b=LECTURE_MIN.y, abs_tol=atol))
+    test_lecture_min(test_obj=self, method=golden_ratio, eps=0.1)
 
 class TestParabola(unittest.TestCase):
   def test_lecture_min(self):
