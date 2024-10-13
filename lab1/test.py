@@ -318,7 +318,7 @@ class TestNewtonRaphson(unittest.TestCase):
     x0 = 3
     eps = self.EPS
 
-    x = newton_raphson(f=self.newton_f_d1_lecture, f_deriv=self.newton_f_d2_lecture, x0=x0, eps=eps, tau=None)
+    x = newton_raphson(f=self.newton_f_d1_lecture, f_deriv=self.newton_f_d2_lecture, x0=x0, eps=eps, use_tau=True)
 
     self.assertAlmostEqual(x, 0)
 
