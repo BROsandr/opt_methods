@@ -305,5 +305,27 @@ class TestNewton(unittest.TestCase):
     self.assertAlmostEqual(expected_points[4].x, actual_points[4].x, places=6)
     self.assertAlmostEqual(expected_points[4].y, actual_points[4].y, places=6)
 
+class TestNewtonRaphson(unittest.TestCase):
+  @staticmethod
+  def newton_f_d1_lecture(x):
+    return math.atan(x)
+
+  @staticmethod
+  def newton_f_d2_lecture(x):
+    return 1 / (1 + x * x)
+
+  EPS = 1e-7
+  X0 = 3
+
+  def test_lecture_min(self):
+    eps = self.EPS
+
+    x = newton_raphson(f=self.newton_f_d1_lecture, f_deriv=self.newton_f_d2_lecture, x0=self.X0, eps=eps, tau=None)
+
+    self.assertAlmostEqual(x, 0)
+
+    with self.assertRaises(ValueError):
+      newton_raphson(f=self.newton_f_d1_lecture, f_deriv=self.newton_f_d2_lecture, x0=self.X0, eps=eps)
+
 if __name__ == '__main__':
     unittest.main()
