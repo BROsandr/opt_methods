@@ -204,7 +204,7 @@ def chord(f: Callable[[Any], Any], a, b, eps)->Point:
       fb = f(b)
 
 def newton(f: Callable[[Any], Any], f_deriv: Callable[[Any], Any], x0: Any,
-	eps, kmax: int=1000) -> Any:
+	eps, tau: float=1.0, kmax: int=1000) -> Any:
   """
   solves f(x) = 0 by Newton's method with precision eps
   :param f: f
@@ -214,11 +214,19 @@ def newton(f: Callable[[Any], Any], f_deriv: Callable[[Any], Any], x0: Any,
   :return: root of f(x) = 0
   """
   x, i = x0, 0
+  auto_tau = True if tau is not None else False
 
   while i < kmax:
     fx = f(x)
     fd = f_deriv(x)
-    x, i = x - fx / fd, i + 1
+
+    if auto_tau:
+      x_tau = x - fx / fd
+      fx_tau = f(x_tau)
+      tau = (fx**2) / (fx**2 + fx_tau**2)
+
+    x = x - tau * fx / fd
+    i += 1
 
     if abs(fx) <= eps: break
 
