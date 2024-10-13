@@ -214,7 +214,7 @@ def newton(f: Callable[[Any], Any], f_deriv: Callable[[Any], Any], x0: Any,
   :return: root of f(x) = 0
   """
   x, i = x0, 0
-  auto_tau = True if tau is not None else False
+  auto_tau = True if tau is None else False
 
   while i < kmax:
     fx = f(x)
