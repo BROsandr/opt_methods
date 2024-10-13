@@ -178,3 +178,27 @@ def midpoint(f: Callable[[Any], Any], a, b, eps)->Point:
       b = x_mid
     else:
       a = x_mid
+
+def chord(f: Callable[[Any], Any], a, b, eps)->Point:
+  assert a <= b
+  assert eps > 0
+
+  fa = f(a)
+  fb = f(b)
+
+  while True:
+    x_tilda = a - fa / (fa - fb) * (a - b)
+
+    fx = f(x_tilda)
+
+    if abs(fx) <= eps:
+      return Point(x=x_tilda, y=None)
+
+    if fx > 0:
+      b = x_tilda
+      fb = fx
+      fa = f(a)
+    else:
+      a = x_tilda
+      fa = fx
+      fb = f(b)

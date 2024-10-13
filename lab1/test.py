@@ -228,5 +228,36 @@ class TestMidpoint(unittest.TestCase):
         self.assertTrue(math.isclose(a=expected_points[i].x, b=actual_points[i].x, abs_tol=1e-3))
         self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_points[i].y, abs_tol=1e-3))
 
+class TestChord(unittest.TestCase):
+  def test_lecture_min(self):
+    eps = 0.05
+
+    actual_xy = chord(f=f_lecture_deriv, a=0, b=1, eps=eps)
+
+    self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
+    self.assertIsNone(actual_xy.y)
+
+  def test_lecture_all_points(self):
+    expected_points = [
+      Point(x=0.216, y=-0.766),
+      Point(x=0.352, y=-0.528),
+      Point(x=0.435, y=-0.319),
+      Point(x=0.480, y=-0.175),
+      Point(x=0.504, y=-0.091),
+      Point(x=0.516, y=-0.046),
+    ]
+
+    eps = 0.05
+    log_points = LogPointsWrap(f_lecture_deriv)
+    chord(f=log_points, a=0, b=1, eps=eps)
+    actual_points = log_points.points
+
+    self.assertEqual(len(expected_points) + 7, len(actual_points))
+
+    for i, actual_point in enumerate(actual_points[2::2]):
+      with self.subTest(i=i):
+        self.assertTrue(math.isclose(a=expected_points[i].x, b=actual_point.x, abs_tol=1e-3))
+        self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_point.y, abs_tol=1e-3))
+
 if __name__ == '__main__':
     unittest.main()
