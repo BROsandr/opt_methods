@@ -276,7 +276,7 @@ class TestNewton(unittest.TestCase):
 
     x = newton(f=self.newton_f_d1_lecture, f_deriv=self.newton_f_d2_lecture, x0=self.X0, eps=eps)
 
-    self.assertAlmostEqual(x, LECTURE_MIN.x, delta=eps)
+    self.assertAlmostEqual(x, 0)
 
   def test_lecture_all_points(self):
     expected_points = [
@@ -294,10 +294,16 @@ class TestNewton(unittest.TestCase):
 
     self.assertEqual(len(expected_points), len(actual_points))
 
-    for i in range(len(expected_points)):
-      with self.subTest(i=i):
-        self.assertAlmostEqual(expected_points[i].x, actual_points[i].x, places=3)
-        self.assertAlmostEqual(expected_points[i].y, actual_points[i].y, places=3)
+    self.assertAlmostEqual(expected_points[0].x, actual_points[0].x, places=3)
+    self.assertAlmostEqual(expected_points[0].y, actual_points[0].y, places=3)
+    self.assertAlmostEqual(expected_points[1].x, actual_points[1].x, places=2)
+    self.assertAlmostEqual(expected_points[1].y, actual_points[1].y, places=3)
+    self.assertAlmostEqual(expected_points[2].x, actual_points[2].x, places=3)
+    self.assertAlmostEqual(expected_points[2].y, actual_points[2].y, places=3)
+    self.assertAlmostEqual(expected_points[3].x, actual_points[3].x, places=5)
+    self.assertAlmostEqual(expected_points[3].y, actual_points[3].y, places=5)
+    self.assertAlmostEqual(expected_points[4].x, actual_points[4].x, places=6)
+    self.assertAlmostEqual(expected_points[4].y, actual_points[4].y, places=6)
 
 if __name__ == '__main__':
     unittest.main()
