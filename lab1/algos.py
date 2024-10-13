@@ -202,3 +202,24 @@ def chord(f: Callable[[Any], Any], a, b, eps)->Point:
       a = x_tilda
       fa = fx
       fb = f(b)
+
+def newton(f: Callable[[Any], Any], f_deriv: Callable[[Any], Any], x0: Any,
+	eps, kmax: int=1000) -> Any:
+  """
+  solves f(x) = 0 by Newton's method with precision eps
+  :param f: f
+  :param f_deriv: f'
+  :param x0: starting point
+  :param eps: precision wanted
+  :return: root of f(x) = 0
+  """
+  x, i = x0, 0
+
+  while i < kmax:
+    fx = f(x)
+    fd = f_deriv(x)
+    x, i = x - fx / fd, i + 1
+
+    if abs(fx) <= eps: break
+
+  return x
