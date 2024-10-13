@@ -274,7 +274,7 @@ class TestNewton(unittest.TestCase):
   def test_lecture_min(self):
     eps = self.EPS
 
-    x = newton(f=self.newton_f_d1_lecture, f_deriv=self.newton_f_d2_lecture, x0=self.X0, eps=eps)
+    x = newton_raphson(f=self.newton_f_d1_lecture, f_deriv=self.newton_f_d2_lecture, x0=self.X0, eps=eps)
 
     self.assertAlmostEqual(x, 0)
 
@@ -289,7 +289,7 @@ class TestNewton(unittest.TestCase):
 
     eps = self.EPS
     log_points = LogPointsWrap(self.newton_f_d1_lecture)
-    newton(f=log_points, f_deriv=self.newton_f_d2_lecture, x0=self.X0, eps=eps)
+    newton_raphson(f=log_points, f_deriv=self.newton_f_d2_lecture, x0=self.X0, eps=eps)
     actual_points = log_points.points
 
     self.assertEqual(len(expected_points), len(actual_points))

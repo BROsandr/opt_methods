@@ -203,7 +203,7 @@ def chord(f: Callable[[Any], Any], a, b, eps)->Point:
       fa = fx
       fb = f(b)
 
-def newton(f: Callable[[Any], Any], f_deriv: Callable[[Any], Any], x0: Any,
+def newton_raphson(f: Callable[[Any], Any], f_deriv: Callable[[Any], Any], x0: Any,
 	eps, tau: float=1.0, kmax: int=1000) -> Any:
   """
   solves f(x) = 0 by Newton's method with precision eps
