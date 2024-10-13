@@ -259,7 +259,7 @@ class TestChord(unittest.TestCase):
         self.assertTrue(math.isclose(a=expected_points[i].x, b=actual_point.x, abs_tol=1e-3))
         self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_point.y, abs_tol=1e-3))
 
-class TestNewton(unittest.TestCase):
+class TestNewtonRaphson(unittest.TestCase):
   @staticmethod
   def newton_f_d1_lecture(x):
     return math.atan(x)
@@ -269,16 +269,17 @@ class TestNewton(unittest.TestCase):
     return 1 / (1 + x * x)
 
   EPS = 1e-7
-  X0 = 1
 
-  def test_lecture_min(self):
+  def test_newt_lecture_min(self):
     eps = self.EPS
+    x0 = 1
 
-    x = newton(f=self.newton_f_d1_lecture, f_deriv=self.newton_f_d2_lecture, x0=self.X0, eps=eps)
+    x = newton(f=self.newton_f_d1_lecture, f_deriv=self.newton_f_d2_lecture, x0=x0, eps=eps)
 
     self.assertAlmostEqual(x, 0)
 
-  def test_lecture_all_points(self):
+  def test_newt_lecture_all_points(self):
+    x0 = 1
     expected_points = [
       Point(x=1, y=0.785),
       Point(x=-0.570, y=-0.519),
@@ -289,7 +290,7 @@ class TestNewton(unittest.TestCase):
 
     eps = self.EPS
     log_points = LogPointsWrap(self.newton_f_d1_lecture)
-    newton(f=log_points, f_deriv=self.newton_f_d2_lecture, x0=self.X0, eps=eps)
+    newton(f=log_points, f_deriv=self.newton_f_d2_lecture, x0=x0, eps=eps)
     actual_points = log_points.points
 
     self.assertEqual(len(expected_points), len(actual_points))
@@ -304,6 +305,22 @@ class TestNewton(unittest.TestCase):
     self.assertAlmostEqual(expected_points[3].y, actual_points[3].y, places=5)
     self.assertAlmostEqual(expected_points[4].x, actual_points[4].x, places=6)
     self.assertAlmostEqual(expected_points[4].y, actual_points[4].y, places=6)
+
+
+  def test_newt_diverge(self):
+    eps = self.EPS
+    x0 = 3
+
+    with self.assertRaises(ValueError):
+      newton(f=self.newton_f_d1_lecture, f_deriv=self.newton_f_d2_lecture, x0=x0, eps=eps)
+
+  def test_newt_raph_lecture_min(self):
+    x0 = 3
+    eps = self.EPS
+
+    x = newton(f=self.newton_f_d1_lecture, f_deriv=self.newton_f_d2_lecture, x0=x0, eps=eps, use_tau=True)
+
+    self.assertAlmostEqual(x, 0)
 
 if __name__ == '__main__':
     unittest.main()
