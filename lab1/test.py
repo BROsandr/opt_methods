@@ -259,5 +259,45 @@ class TestChord(unittest.TestCase):
         self.assertTrue(math.isclose(a=expected_points[i].x, b=actual_point.x, abs_tol=1e-3))
         self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_point.y, abs_tol=1e-3))
 
+class TestNewton(unittest.TestCase):
+  @staticmethod
+  def newton_f_d1_lecture(x):
+    return math.atan(x)
+
+  @staticmethod
+  def newton_f_d2_lecture(x):
+    return 1 / (1 + x * x)
+
+  EPS = 1e-7
+  X0 = 1
+
+  def test_lecture_min(self):
+    eps = self.EPS
+
+    x = newton(f=self.newton_f_d1_lecture, f_deriv=self.newton_f_d2_lecture, x0=self.X0, eps=eps)
+
+    self.assertAlmostEqual(x, LECTURE_MIN.x, delta=eps)
+
+  def test_lecture_all_points(self):
+    expected_points = [
+      Point(x=1, y=0.785),
+      Point(x=-0.570, y=-0.519),
+      Point(x=0.117, y=0.116),
+      Point(x=-1.061e-3, y=-1.061e-3),
+      Point(x=9e-8, y=9e-8),
+    ]
+
+    eps = self.EPS
+    log_points = LogPointsWrap(self.newton_f_d1_lecture)
+    newton(f=log_points, f_deriv=self.newton_f_d2_lecture, x0=self.X0, eps=eps)
+    actual_points = log_points.points
+
+    self.assertEqual(len(expected_points), len(actual_points))
+
+    for i in range(len(expected_points)):
+      with self.subTest(i=i):
+        self.assertAlmostEqual(expected_points[i].x, actual_points[i].x, places=3)
+        self.assertAlmostEqual(expected_points[i].y, actual_points[i].y, places=3)
+
 if __name__ == '__main__':
     unittest.main()
