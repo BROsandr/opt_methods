@@ -162,3 +162,19 @@ def parabola(f: Callable[[Any], Any], a, b, eps)->Point:
         f2 = f_min
 
     old_x_min = x_min
+
+def midpoint(f: Callable[[Any], Any], a, b, eps)->Point:
+  assert a <= b
+  assert eps > 0
+
+  while True:
+    x_mid = (a + b) / 2
+    f_mid = f(x_mid)
+
+    if abs(f_mid) <= eps:
+      return Point(x=x_mid, y=None)
+
+    if f_mid > 0:
+      b = x_mid
+    else:
+      a = x_mid

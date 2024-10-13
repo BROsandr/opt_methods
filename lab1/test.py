@@ -14,6 +14,9 @@ def get_y_abs_tol(f: Callable, x, eps):
 def f_lecture(x):
   return x**4 + math.exp(-x)
 
+def f_lecture_deriv(x):
+  return 4 * x**3 - math.exp(-x)
+
 LECTURE_MIN = Point(x=0.52825, y=0.66750)
 
 def test_lecture_min(test_obj, method: Callable, eps):
@@ -194,6 +197,36 @@ class TestParabola(unittest.TestCase):
 
     self.assertTrue(math.isclose(a=actual_points[-1].x, b=expected_points[-1].x, abs_tol=1e-4))
     self.assertIsNone(actual_points[-1].y)
+
+class TestMidpoint(unittest.TestCase):
+  def test_lecture_min(self):
+    eps = 0.02
+
+    actual_xy = midpoint(f=f_lecture_deriv, a=0, b=1, eps=eps)
+
+    self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
+    self.assertIsNone(actual_xy.y)
+
+  def test_lecture_all_points(self):
+    expected_points = [
+      Point(x=0.500, y=-0.107),
+      Point(x=0.750, y= 1.215),
+      Point(x=0.625, y= 0.441),
+      Point(x=0.563, y= 0.142),
+      Point(x=0.531, y= 0.012),
+    ]
+
+    eps = 0.02
+    log_points = LogPointsWrap(f_lecture_deriv)
+    midpoint(f=log_points, a=0, b=1, eps=eps)
+    actual_points = log_points.points
+
+    self.assertEqual(len(expected_points), len(actual_points))
+
+    for i in range(len(expected_points)):
+      with self.subTest(i=i):
+        self.assertTrue(math.isclose(a=expected_points[i].x, b=actual_points[i].x, abs_tol=1e-3))
+        self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_points[i].y, abs_tol=1e-3))
 
 if __name__ == '__main__':
     unittest.main()
