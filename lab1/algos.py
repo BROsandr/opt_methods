@@ -204,18 +204,22 @@ def chord(f: Callable[[Any], Any], a, b, eps)->Point:
       fb = f(b)
 
 def newton(f: Callable[[Any], Any], f_deriv: Callable[[Any], Any], x0: Any,
-	eps, kmax: int=1000) -> float:
-	"""
-	solves f(x) = 0 by Newton's method with precision eps
-	:param f: f
-	:param f_deriv: f'
-	:param x0: starting point
-	:param eps: precision wanted
-	:return: root of f(x) = 0
-	"""
-	x, x_prev, i = x0, x0 + 2 * eps, 0
+	eps, kmax: int=1000) -> Any:
+  """
+  solves f(x) = 0 by Newton's method with precision eps
+  :param f: f
+  :param f_deriv: f'
+  :param x0: starting point
+  :param eps: precision wanted
+  :return: root of f(x) = 0
+  """
+  x, i = x0, 0
 
-	while abs(x - x_prev) >= eps and i < kmax:
-		x, x_prev, i = x - f(x) / f_deriv(x), x, i + 1
+  while i < kmax:
+    fx = f(x)
+    fd = f_deriv(x)
+    x, i = x - fx / fd, i + 1
 
-	return x
+    if abs(fx) <= eps: break
+
+  return x
