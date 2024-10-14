@@ -352,5 +352,26 @@ class TestNewtonRaphson(unittest.TestCase):
     self.assertAlmostEqual(actual_xy.x, 2)
     self.assertIsNone(actual_xy.y)
 
+  def test_newt_lecture2_all_points(self):
+    x0 = 1
+    expected_points = [
+      Point(x=1.0000, y=None),
+      Point(x=1.4118, y=None),
+      Point(x=1.8010, y=None),
+      Point(x=1.9790, y=None),
+      Point(x=1.9998, y=None),
+    ]
+
+    eps = self.EPS
+    log_points = LogPointsWrap(self.fd1_lecture2)
+    newton(fd1=log_points, fd2=self.fd2_lecture2, x0=x0, eps=eps)
+    actual_points = log_points.points
+
+    self.assertAlmostEqual(expected_points[0].x, actual_points[0].x, places=4)
+    self.assertAlmostEqual(expected_points[1].x, actual_points[1].x, places=4)
+    self.assertAlmostEqual(expected_points[2].x, actual_points[2].x, places=3)
+    self.assertAlmostEqual(expected_points[3].x, actual_points[3].x, places=4)
+    self.assertAlmostEqual(expected_points[4].x, actual_points[4].x, places=4)
+
 if __name__ == '__main__':
     unittest.main()
