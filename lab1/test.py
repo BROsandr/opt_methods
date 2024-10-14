@@ -1,8 +1,13 @@
 import unittest
 import math
 from algos import *
+from utils import *
 from typing import Callable
 from utils import Point, LogPointsWrap
+import matplotlib.pyplot as plt
+
+def should_draw(test_case: unittest.TestCase)->bool:
+  return True
 
 def get_y_abs_tol(f: Callable, x, eps):
   assert eps > 0
@@ -53,6 +58,11 @@ class TestBruteFroce(unittest.TestCase):
     log_points = LogPointsWrap(f_lecture)
     brute_force(f=log_points, a=0, b=1, eps=eps)
     actual_points = log_points.points
+
+    if should_draw(self):
+      fig, ax = plt.subplots()
+      plot_brute_force(ax=ax, f=f_lecture, a=0, b=1, points=actual_points, eps=eps)
+      plt.show()
 
     self.assertEqual(len(expected_points), len(actual_points))
 
