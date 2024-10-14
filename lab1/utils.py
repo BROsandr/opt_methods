@@ -36,4 +36,3 @@ def plot_brute_force(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point,
 
   ax.set(xlabel='x', ylabel='y',
         title='Brute force')
-  ax.grid()
