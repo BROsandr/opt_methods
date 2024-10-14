@@ -322,5 +322,15 @@ class TestNewtonRaphson(unittest.TestCase):
 
     self.assertAlmostEqual(x, 0)
 
+  def test_marq_lecture_min(self):
+    f = lambda x: x * math.atan(x) - 1 / 2 * math.log(1 + x**2)
+
+    x0 = 3
+    eps = self.EPS
+
+    x = newton(fd1=self.newton_f_d1_lecture, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps, f=f)
+
+    self.assertAlmostEqual(x, 0)
+
 if __name__ == '__main__':
     unittest.main()

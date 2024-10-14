@@ -204,7 +204,7 @@ def chord(f: Callable[[Any], Any], a, b, eps)->Point:
       fb = f(b)
 
 def newton(fd1: Callable[[Any], Any], fd2: Callable[[Any], Any], x0: Any,
-	eps, use_tau=False, kmax: int=1000) -> Any:
+	eps, use_tau=False, f=None, kmax: int=1000) -> Any:
   """
   solves f'(x) = 0 by Newton's method with precision eps
   :param fd1: f'
@@ -215,6 +215,7 @@ def newton(fd1: Callable[[Any], Any], fd2: Callable[[Any], Any], x0: Any,
   """
   x, i = x0, 0
   tau = 1.0
+  mu = 0
 
   while i < kmax:
     yd1 = fd1(x)
@@ -225,8 +226,18 @@ def newton(fd1: Callable[[Any], Any], fd2: Callable[[Any], Any], x0: Any,
       yd1_tau = fd1(x_tau)
       tau = (yd1**2) / (yd1**2 + yd1_tau**2)
 
-    x_new = x - tau * yd1 / yd2
+    if f is not None and mu == 0:
+      mu = yd2 * 10
+
+    x_new = x - tau * yd1 / (yd2 + mu)
     new_x_delta = abs(x_new - x)
+
+    if f is not None:
+      if f(x_new) < f(x):
+        mu /= 2
+      else:
+        mu *= 2
+
     x = x_new
 
     if i > 0 and old_x_delta <= new_x_delta:
