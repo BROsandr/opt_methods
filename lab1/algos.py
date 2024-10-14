@@ -221,16 +221,18 @@ def newton(fd1: Callable[[Any], Any], fd2: Callable[[Any], Any], x0: Any,
     yd1 = fd1(x)
     yd2 = fd2(x)
 
-    if use_tau:
-      x_tau = x - yd1 / yd2
-      yd1_tau = fd1(x_tau)
-      tau = (yd1**2) / (yd1**2 + yd1_tau**2)
+    try:
+      if use_tau:
+        x_tau = x - yd1 / yd2
+        yd1_tau = fd1(x_tau)
+        tau = (yd1**2) / (yd1**2 + yd1_tau**2)
 
-    if f is not None and mu == 0:
-      mu = yd2 * 10
+      if f is not None and mu == 0:
+        mu = yd2 * 10
 
-    x_new = x - tau * yd1 / (yd2 + mu)
-    new_x_delta = abs(x_new - x)
+      x_new = x - tau * yd1 / (yd2 + mu)
+    except ZeroDivisionError:
+      raise ValueError(f"The method doesn't converge with x0: {x0}, eps: {eps}, tau: {tau}")
 
     if f is not None:
       if f(x_new) < f(x):
@@ -239,12 +241,6 @@ def newton(fd1: Callable[[Any], Any], fd2: Callable[[Any], Any], x0: Any,
         mu *= 2
 
     x = x_new
-
-    if i > 0 and old_x_delta <= new_x_delta:
-      raise ValueError(f"The method doesn't converge with x0: {x0}, eps: {eps}, tau: {tau}")
-
-    old_x_delta = new_x_delta
-
     i += 1
 
     if abs(yd1) <= eps: break
