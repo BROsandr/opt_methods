@@ -232,7 +232,7 @@ def newton(fd1: Callable[[Any], Any], fd2: Callable[[Any], Any], x0: Any,
 
       x_new = x - tau * yd1 / (yd2 + mu)
     except ZeroDivisionError:
-      raise ValueError(f"The method doesn't converge with x0: {x0}, eps: {eps}, tau: {tau}")
+      raise ValueError(f"The method doesn't converge after the iteration: №{i} with x0: {x0}, eps: {eps}, tau: {tau}")
 
     if f is not None:
       if f(x_new) < f(x):
