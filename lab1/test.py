@@ -274,9 +274,10 @@ class TestNewtonRaphson(unittest.TestCase):
     eps = self.EPS
     x0 = 1
 
-    x = newton(fd1=self.newton_f_d1_lecture, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps)
+    actual_xy = newton(fd1=self.newton_f_d1_lecture, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps)
 
-    self.assertAlmostEqual(x, 0)
+    self.assertAlmostEqual(actual_xy.x, 0)
+    self.assertIsNone(actual_xy.y)
 
   def test_newt_lecture_all_points(self):
     x0 = 1
@@ -318,9 +319,10 @@ class TestNewtonRaphson(unittest.TestCase):
     x0 = 3
     eps = self.EPS
 
-    x = newton(fd1=self.newton_f_d1_lecture, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps, use_tau=True)
+    actual_xy = newton(fd1=self.newton_f_d1_lecture, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps, use_tau=True)
 
-    self.assertAlmostEqual(x, 0)
+    self.assertAlmostEqual(actual_xy.x, 0)
+    self.assertIsNone(actual_xy.y)
 
   def test_marq_lecture_min(self):
     f = lambda x: x * math.atan(x) - 1 / 2 * math.log(1 + x**2)
@@ -328,9 +330,10 @@ class TestNewtonRaphson(unittest.TestCase):
     x0 = 3
     eps = self.EPS
 
-    x = newton(fd1=self.newton_f_d1_lecture, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps, f=f)
+    actual_xy = newton(fd1=self.newton_f_d1_lecture, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps, f=f)
 
-    self.assertAlmostEqual(x, 0)
+    self.assertAlmostEqual(actual_xy.x, 0)
+    self.assertAlmostEqual(actual_xy.y, 0)
 
 if __name__ == '__main__':
     unittest.main()

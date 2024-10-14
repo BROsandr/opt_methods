@@ -203,17 +203,21 @@ def chord(f: Callable[[Any], Any], a, b, eps)->Point:
       fa = fx
       fb = f(b)
 
-def newton(fd1: Callable[[Any], Any], fd2: Callable[[Any], Any], x0: Any,
-	eps, use_tau=False, f=None, kmax: int=1000) -> Any:
+def newton(fd1: Callable[[Any], Any], fd2: Callable[[Any], Any],
+           x0: Any,	eps, use_tau=False, f=None, kmax: int=1000) -> Point:
   """
   solves f'(x) = 0 by Newton's method with precision eps
   :param fd1: f'
   :param fd2: f''
   :param x0: starting point
   :param eps: precision wanted
-  :return: root of f'(x) = 0
+  :return: root Point(x, y) of f'(x) = 0
   """
+
+  assert eps > 0
+
   x, i = x0, 0
+  y = f(x) if f is not None else None
   tau = 1.0
   mu = 0
 
@@ -235,14 +239,17 @@ def newton(fd1: Callable[[Any], Any], fd2: Callable[[Any], Any], x0: Any,
       raise ValueError(f"The method doesn't converge after the iteration: №{i} with x0: {x0}, eps: {eps}, tau: {tau}") from e
 
     if f is not None:
-      if f(x_new) < f(x):
+      y_new = f(x_new)
+      if y_new < y:
         mu /= 2
       else:
         mu *= 2
+
+      y = y_new
 
     x = x_new
     i += 1
 
     if abs(yd1) <= eps: break
 
-  return x
+  return Point(x=x, y=y)
