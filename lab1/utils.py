@@ -36,3 +36,28 @@ def plot_brute_force(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point,
 
   ax.set(xlabel='x', ylabel='y',
         title='Brute force')
+
+def plot_arrow(ax, origin: Point, f, direction):
+  dx = 0.0001 if direction >= 0 else -0.0001
+  dy = f(origin.x + dx) - origin.y
+  ax.arrow(origin.x, origin.y, dx, dy, shape='full', lw=0, length_includes_head=True, head_width=.02)
+
+def plot_bitwise_search(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point, k_points: list[Point], eps):
+  x = np.arange(a, b, 0.001)
+  y = [f(y) for y in x]
+
+  ax.plot(x, y)
+
+  points_x = [point.x for point in k_points]
+  points_y = [point.y for point in k_points]
+  ax.scatter(points_x, points_y, c='b', label='$x_k$')
+  for old_point, new_point in zip(k_points[:-1], k_points[1:]):
+    if old_point.x < new_point.x:
+      plot_arrow(ax=ax, origin=new_point, f=f, direction=1)
+    else:
+      plot_arrow(ax=ax, origin=new_point, f=f, direction=-1)
+
+  ax.scatter(star_point.x, star_point.y, c='r', label='$x^*$')
+
+  ax.set(xlabel='x', ylabel='y',
+        title='Bitwise search')
