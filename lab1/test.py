@@ -61,7 +61,8 @@ class TestBruteFroce(unittest.TestCase):
 
     if should_draw(self):
       fig, ax = plt.subplots()
-      plot_brute_force(ax=ax, f=f_lecture, a=0, b=1, points=actual_points, eps=eps)
+      plot_brute_force(ax=ax, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, k_points=actual_points, eps=eps)
+      ax.legend()
       plt.show()
 
     self.assertEqual(len(expected_points), len(actual_points))
