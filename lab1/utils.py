@@ -19,6 +19,9 @@ class LogPointsWrap:
 
     return y
 
+def plot_x_eps(ax: Axes, origin: Point, eps):
+  ax.plot([origin.x - eps, origin.x + eps], [origin.y]*2, 'k|-')
+
 def plot_brute_force(ax: Axes, f: Callable[[Any], Any], a, b, points: list[Point], eps):
   x = np.arange(a, b, 0.001)
   y = [f(y) for y in x]
