@@ -335,14 +335,19 @@ class TestNewtonRaphson(unittest.TestCase):
     self.assertAlmostEqual(actual_xy.x, 0)
     self.assertAlmostEqual(actual_xy.y, 0)
 
+  @staticmethod
+  def fd1_lecture2(x):
+    return 2 * x - 16 / x**2
+
+  @staticmethod
+  def fd2_lecture2(x):
+    return 2 + 32 / x**3
+
   def test_newt_lecture_min2(self):
     eps = self.EPS
     x0 = 1
 
-    fd1 = lambda x: 2 * x - 16 / x**2
-    fd2 = lambda x: 2 + 32 / x**3
-
-    actual_xy = newton(fd1=fd1, fd2=fd2, x0=x0, eps=eps)
+    actual_xy = newton(fd1=self.fd1_lecture2, fd2=self.fd2_lecture2, x0=x0, eps=eps)
 
     self.assertAlmostEqual(actual_xy.x, 2)
     self.assertIsNone(actual_xy.y)
