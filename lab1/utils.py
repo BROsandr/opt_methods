@@ -31,6 +31,8 @@ def plot_brute_force(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point,
   points_x = [point.x for point in k_points]
   points_y = [point.y for point in k_points]
   ax.scatter(points_x, points_y, c='b', label='$x_k$')
+  for i, (xi, yi) in enumerate(zip(points_x, points_y)):
+    ax.text(xi, yi, f'{i+1}', fontsize=12, ha='left')
 
   ax.scatter(star_point.x, star_point.y, c='r', label='$x^*$')
 
@@ -51,6 +53,8 @@ def plot_bitwise_search(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Poi
   points_x = [point.x for point in k_points]
   points_y = [point.y for point in k_points]
   ax.scatter(points_x, points_y, c='b', label='$x_k$')
+  for i, (xi, yi) in enumerate(zip(points_x, points_y)):
+    ax.text(xi, yi, f'{i+1}', fontsize=12, ha='left')
   for old_point, new_point in zip(k_points[:-1], k_points[1:]):
     if old_point.x < new_point.x:
       plot_arrow(ax=ax, origin=new_point, f=f, direction=1)
