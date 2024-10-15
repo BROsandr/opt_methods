@@ -28,14 +28,16 @@ def plot_brute_force(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point,
 
   ax.plot(x, y)
 
-  points_x = [point.x for point in k_points]
-  points_y = [point.y for point in k_points]
+  answer_point = k_points[-1]
+  points_x = [point.x for point in k_points[:-1]]
+  points_y = [point.y for point in k_points[:-1]]
   ax.scatter(points_x, points_y, c='b', label='$x_k$')
   for i, (xi, yi) in enumerate(zip(points_x, points_y)):
     ax.text(xi, yi, f'{i+1}', fontsize=12, ha='left')
 
   ax.scatter(star_point.x, star_point.y, c='r', label='$x^*$')
   plot_x_eps(ax=ax, origin=star_point, eps=eps)
+  ax.scatter(answer_point.x, answer_point.y, c='g', label='$x_n$')
 
   ax.set(xlabel='x', ylabel='y',
         title='Brute force')
