@@ -236,7 +236,7 @@ def newton(fd1: Callable[[Any], Any], fd2: Callable[[Any], Any],
 
       x_new = x - tau * yd1 / (yd2 + mu)
     except ZeroDivisionError as e:
-      raise ValueError(f"The method doesn't converge after the iteration: №{i} with x0: {x0}, eps: {eps}, tau: {tau}") from e
+      raise ValueError(f"The method doesn't converge after the iteration: №{i} with x0: {x0}, ε: {eps}, τ: {tau}, μ: {mu}") from e
 
     if f is not None:
       y_new = f(x_new)
@@ -251,5 +251,8 @@ def newton(fd1: Callable[[Any], Any], fd2: Callable[[Any], Any],
     i += 1
 
     if abs(yd1) <= eps: break
+
+  if i == kmax:
+    raise ValueError(f"The method didn't achieve the specified ε after the max iteration: №{i} with x0: {x0}, ε: {eps}, τ: {tau}, μ: {mu}")
 
   return Point(x=x, y=y)
