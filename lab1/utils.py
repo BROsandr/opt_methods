@@ -35,6 +35,7 @@ def plot_brute_force(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point,
     ax.text(xi, yi, f'{i+1}', fontsize=12, ha='left')
 
   ax.scatter(star_point.x, star_point.y, c='r', label='$x^*$')
+  plot_x_eps(ax=ax, origin=star_point, eps=eps)
 
   ax.set(xlabel='x', ylabel='y',
         title='Brute force')
@@ -62,6 +63,7 @@ def plot_bitwise_search(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Poi
       plot_arrow(ax=ax, origin=new_point, f=f, direction=-1)
 
   ax.scatter(star_point.x, star_point.y, c='r', label='$x^*$')
+  plot_x_eps(ax=ax, origin=star_point, eps=eps)
 
   ax.set(xlabel='x', ylabel='y',
         title='Bitwise search')
