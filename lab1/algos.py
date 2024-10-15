@@ -252,4 +252,7 @@ def newton(fd1: Callable[[Any], Any], fd2: Callable[[Any], Any],
 
     if abs(yd1) <= eps: break
 
+  if i == kmax:
+    raise ValueError(f"The method didn't achieve the specified ε after the max iteration: №{i} with x0: {x0}, ε: {eps}, τ: {tau}, μ: {mu}")
+
   return Point(x=x, y=y)
