@@ -5,6 +5,7 @@ from utils import *
 from typing import Callable
 from utils import Point, LogPointsWrap
 import matplotlib.pyplot as plt
+from plot import *
 
 def should_draw(test_case: unittest.TestCase)->bool:
   return True
