@@ -4,7 +4,6 @@ from algos import *
 from utils import *
 from typing import Callable
 from utils import Point, LogPointsWrap
-import matplotlib.pyplot as plt
 from plot import *
 
 def should_draw(test_case: unittest.TestCase)->bool:
@@ -61,11 +60,7 @@ class TestBruteFroce(unittest.TestCase):
     actual_points = log_points.points
 
     if should_draw(self):
-      fig, ax = plt.subplots()
-      plot_brute_force(ax=ax, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points, eps=eps, title='Перебор')
-      ax.legend()
-      ax.grid()
-      plt.show()
+      draw_brute_force(f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points, eps=eps)
 
     self.assertEqual(len(expected_points), len(actual_points))
 
@@ -96,11 +91,7 @@ class TestBitwiseSearch(unittest.TestCase):
     actual_points = log_points.points
 
     if should_draw(self):
-      fig, ax = plt.subplots()
-      plot_brute_force(ax=ax, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points, eps=eps, title='Поразрядный поиск')
-      ax.legend()
-      ax.grid()
-      plt.show()
+      draw_bitwise_search(f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points, eps=eps)
 
     self.assertEqual(len(expected_points), len(actual_points))
 
