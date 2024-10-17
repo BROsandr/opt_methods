@@ -32,16 +32,9 @@ def plot_arrow(ax, origin: Point, f, direction):
   dy = f(origin.x + dx) - origin.y
   ax.arrow(origin.x, origin.y, dx, dy, shape='full', lw=0, length_includes_head=True, head_width=.02)
 
-def draw_brute_force(f: Callable[[Any], Any], a, b, star_point: Point, eps_point: Point, k_points: list[Point], eps):
+def draw_single_plot(plotting_f: Callable):
   fig, ax = plt.subplots()
-  plot_brute_force(ax=ax, f=f, a=a, b=b, star_point=star_point, eps_point=eps_point, k_points=k_points, eps=eps, title='Перебор')
-  ax.legend()
-  ax.grid()
-  plt.show()
-
-def draw_bitwise_search(f: Callable[[Any], Any], a, b, star_point: Point, eps_point: Point, k_points: list[Point], eps):
-  fig, ax = plt.subplots()
-  plot_brute_force(ax=ax, f=f, a=a, b=b, star_point=star_point, eps_point=eps_point, k_points=k_points, eps=eps, title='Поразрядный поиск')
+  plotting_f(ax=ax)
   ax.legend()
   ax.grid()
   plt.show()

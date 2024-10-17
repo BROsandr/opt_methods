@@ -1,3 +1,4 @@
+from functools import partial
 import unittest
 import math
 from algos import *
@@ -60,7 +61,8 @@ class TestBruteFroce(unittest.TestCase):
     actual_points = log_points.points
 
     if should_draw(self):
-      draw_brute_force(f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points, eps=eps)
+      plotting_f = partial(plot_brute_force, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points, eps=eps, title='Перебор')
+      draw_single_plot(plotting_f=plotting_f)
 
     self.assertEqual(len(expected_points), len(actual_points))
 
@@ -91,7 +93,8 @@ class TestBitwiseSearch(unittest.TestCase):
     actual_points = log_points.points
 
     if should_draw(self):
-      draw_bitwise_search(f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points, eps=eps)
+      plotting_f = partial(plot_brute_force, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points, eps=eps, title='Поразрядный поиск')
+      draw_single_plot(plotting_f=plotting_f)
 
     self.assertEqual(len(expected_points), len(actual_points))
 
