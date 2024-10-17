@@ -56,12 +56,12 @@ class TestBruteFroce(unittest.TestCase):
 
     eps = 0.1
     log_points = LogPointsWrap(f_lecture)
-    brute_force(f=log_points, a=0, b=1, eps=eps)
+    eps_point = brute_force(f=log_points, a=0, b=1, eps=eps)
     actual_points = log_points.points
 
     if should_draw(self):
       fig, ax = plt.subplots()
-      plot_brute_force(ax=ax, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, k_points=actual_points, eps=eps)
+      plot_brute_force(ax=ax, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points, eps=eps)
       ax.legend()
       ax.grid()
       plt.show()
