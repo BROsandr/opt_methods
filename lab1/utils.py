@@ -20,7 +20,7 @@ class LogPointsWrap:
     return y
 
 def plot_x_eps(ax: Axes, origin: Point, eps):
-  ax.plot([origin.x - eps, origin.x + eps], [origin.y]*2, 'k|-')
+  ax.axvspan(origin.x - eps, origin.x + eps, color='lightcoral', alpha=0.3)  # lightcoral is a light red color
 
 def plot_brute_force(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point, k_points: list[Point], eps):
   x = np.arange(a, b, 0.001)
