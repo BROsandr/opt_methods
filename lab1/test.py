@@ -161,8 +161,12 @@ class TestDichotomy(unittest.TestCase):
 
     eps = 0.1
     log_points = LogPointsWrap(f_lecture)
-    dichotomy(f=log_points, a=0, b=1, eps=eps)
+    eps_point = dichotomy(f=log_points, a=0, b=1, eps=eps)
     actual_points = log_points.points
+
+    if should_draw(self):
+      plotting_f = partial(plot_brute_force, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points, eps=eps, title='Дихотомия')
+      draw_single_plot(plotting_f=plotting_f)
 
     self.assertEqual(len(expected_points), len(actual_points))
 
