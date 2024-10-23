@@ -27,6 +27,29 @@ def plot_brute_force(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point,
   ax.set(xlabel='x', ylabel='y',
         title=title)
 
+def plot_parabola(ax: Axes, points: list[Point]):
+  points = sorted(points, key=lambda point: point.x)
+
+  a0 = points[0].y
+  a1 = (points[1].y - points[0].y) / (points[1].x - points[0].x)
+  a2 = 1 / (points[2].x - points[1].x) * \
+      ((points[2].y - points[0].y) / (points[2].x - points[0].x) - \
+       (points[1].y - points[0].y) / (points[1].x - points[0].x))
+
+  f = lambda x: a0 + a1 * (x - points[0].x) + a2 * (x - points[0].x) * (x - points[1].x)
+
+  x = np.arange(a, b, 0.001)
+  y = [f(y) for y in x]
+
+  ax.plot(x, y)  
+
+def plot_parabola_meth(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point, eps_point: Point, k_points: list[Point], eps):
+  title = 'Парабола'
+  plot_brute_force(ax=ax, f=f, a=a, b=b, star_point=star_point, eps_point=eps_point, k_points=k_points, eps=eps, title=title)
+
+  parabola_points = k_points[:3]
+  plot_parabola(ax=ax, points=parabola_points)
+
 def plot_arrow(ax, origin: Point, f, direction):
   dx = 0.0001 if direction >= 0 else -0.0001
   dy = f(origin.x + dx) - origin.y
