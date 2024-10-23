@@ -164,7 +164,7 @@ class TestGoldenRatio(unittest.TestCase):
   MIN_POINT = Point(x=-1/4, y=37/8)
 
   def test_parabola(self):
-    f = f_lecture
+    f = self.f
     eps = 0.1
 
     actual_xy = golden_ratio(f=f, a=-3, b=1, eps=eps)
