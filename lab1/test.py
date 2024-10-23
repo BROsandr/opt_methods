@@ -183,14 +183,22 @@ class TestGoldenRatio(unittest.TestCase):
 
   def test_parabola(self):
     f = self.f
+    log_points = LogPointsWrap(f)
     eps = 0.1
+    a, b = -3, 1
 
-    actual_xy = golden_ratio(f=f, a=-3, b=1, eps=eps)
+    eps_point = golden_ratio(f=log_points, a=-3, b=1, eps=eps)
 
-    atol = get_y_abs_tol(f=f, x=self.MIN_POINT.x, eps=eps)
+    atol = get_y_abs_tol(f=log_points, x=self.MIN_POINT.x, eps=eps)
 
-    self.assertTrue(math.isclose(a=actual_xy.x, b=self.MIN_POINT.x, abs_tol=eps))
-    self.assertTrue(math.isclose(a=actual_xy.y, b=self.MIN_POINT.y, abs_tol=atol))
+    self.assertTrue(math.isclose(a=eps_point.x, b=self.MIN_POINT.x, abs_tol=eps))
+    self.assertTrue(math.isclose(a=eps_point.y, b=self.MIN_POINT.y, abs_tol=atol))
+
+    actual_points = log_points.points
+
+    if should_draw(self):
+      plotting_f = partial(plot_brute_force, f=f, a=a, b=b, star_point=self.MIN_POINT, eps_point=eps_point, k_points=actual_points, eps=eps, title='Золотое сечение')
+      draw_single_plot(plotting_f=plotting_f)
 
 class TestParabola(unittest.TestCase):
   def test_lecture_min(self):
