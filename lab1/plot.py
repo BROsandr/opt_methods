@@ -51,6 +51,31 @@ def plot_parabola_meth(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Poin
   parabola_points = k_points[:3]
   plot_parabola(ax=ax, points=parabola_points)
 
+  for point in k_points[3:]:
+    x_min = point.x
+    f_min = point.y
+    if x_min < parabola_points[1].x:
+      if f_min >= parabola_points[1].y:
+        parabola_points[0].x = x_min
+        parabola_points[0].y = f_min
+      else:
+        parabola_points[2].x = parabola_points[1].x
+        parabola_points[2].y = parabola_points[1].y
+        parabola_points[1].x = x_min
+        parabola_points[1].y = f_min
+
+    else:
+      if f_min < parabola_points[1].y:
+        parabola_points[0].x = parabola_points[1].x
+        parabola_points[0].y = parabola_points[1].y
+        parabola_points[1].x = x_min
+        parabola_points[1].y = f_min
+      else:
+        parabola_points[2].x = x_min
+        parabola_points[2].y = f_min
+
+    plot_parabola(ax=ax, points=parabola_points)
+
 def plot_arrow(ax, origin: Point, f, direction):
   dx = 0.0001 if direction >= 0 else -0.0001
   dy = f(origin.x + dx) - origin.y
