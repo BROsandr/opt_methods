@@ -38,10 +38,11 @@ def plot_parabola(ax: Axes, points: list[Point]):
 
   f = lambda x: a0 + a1 * (x - points[0].x) + a2 * (x - points[0].x) * (x - points[1].x)
 
-  x = np.arange(a, b, 0.001)
+  wings = (points[2].x - points[0].x) / 10
+  x = np.arange(points[0].x-wings, points[2].x+wings, 0.001)
   y = [f(y) for y in x]
 
-  ax.plot(x, y)  
+  ax.plot(x, y, color='orange')
 
 def plot_parabola_meth(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point, eps_point: Point, k_points: list[Point], eps):
   title = 'Парабола'
