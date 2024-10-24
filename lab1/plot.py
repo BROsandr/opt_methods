@@ -28,7 +28,7 @@ def plot_brute_force(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point,
         title=title)
 
 def plot_parabola(ax: Axes, points: list[Point]):
-  points = sorted(points, key=lambda point: point.x)
+  points = sorted(points)
 
   a0 = points[0].y
   a1 = (points[1].y - points[0].y) / (points[1].x - points[0].x)
