@@ -156,10 +156,8 @@ def parabola(f: Callable[[Any], Any], a, b, eps)->Point:
         x2 = x_min
         f2 = f_min
       else:
-        x1 = x2
-        f1 = f2
-        x2 = x_min
-        f2 = f_min
+        x3 = x_min
+        f3 = f_min
 
     old_x_min = x_min
 
