@@ -226,10 +226,6 @@ class TestParabola(unittest.TestCase):
     log_points = LogPointsWrap(f_lecture)
     min_point = parabola(f=log_points, a=0, b=1, eps=eps)
 
-    if should_draw(self):
-      plotting_f = partial(plot_parabola_meth, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=min_point, k_points=log_points.points, eps=eps)
-      draw_single_plot(plotting_f=plotting_f)
-
     actual_points = log_points.points + [min_point]
 
     self.assertEqual(len(expected_points), len(actual_points))
@@ -241,6 +237,10 @@ class TestParabola(unittest.TestCase):
 
     self.assertTrue(math.isclose(a=actual_points[-1].x, b=expected_points[-1].x, abs_tol=1e-4))
     self.assertIsNone(actual_points[-1].y)
+
+    if should_draw(self):
+      plotting_f = partial(plot_parabola_meth, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=min_point, k_points=log_points.points, eps=eps)
+      draw_single_plot(plotting_f=plotting_f)
 
 class TestMidpoint(unittest.TestCase):
   def test_lecture_min(self):
