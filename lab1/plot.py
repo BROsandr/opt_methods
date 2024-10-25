@@ -144,4 +144,4 @@ def plot_chord(ax: Axes, fd1: Callable[[Any], Any], a, b, star_point: Point, eps
   ax.scatter(answer_point.x, fd1(answer_point.x), c='c', label='$x_ε$')
 
   ax.set(xlabel='x', ylabel='y',
-        title='Хорды')
+        title="f', Хорды")
