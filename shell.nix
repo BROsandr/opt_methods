@@ -8,6 +8,7 @@ in pkgs.mkShell rec {
   venvDir = "./.venv";
   buildInputs = with pkgs; [
     pythonPackages.numpy
+    pythonPackages.matplotlib
 
     # A Python interpreter including the 'venv' module is required to bootstrap
     # the environment.
