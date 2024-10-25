@@ -404,11 +404,23 @@ class TestNewtonRaphson(unittest.TestCase):
   def test_newt_raph_lecture_min(self):
     x0 = 3
     eps = self.EPS
+    log_points = LogPointsWrap(self.newton_f_d1_lecture)
 
-    actual_xy = newton(fd1=self.newton_f_d1_lecture, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps, use_tau=True)
+    actual_xy = newton(fd1=log_points, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps, use_tau=True)
+    actual_points = log_points.points
 
     self.assertAlmostEqual(actual_xy.x, 0)
     self.assertIsNone(actual_xy.y)
+
+    if should_draw(self):
+      sorted_k_x_points = sorted(map(lambda point: point.x, actual_points))
+      wings = (max(sorted_k_x_points) - min(sorted_k_x_points)) / 10
+      a = min(sorted_k_x_points) - wings
+      b = max(sorted_k_x_points) + wings
+      star_point = Point(0, self.newton_f_lecture(0))
+      eps_point = Point(actual_xy.x, self.newton_f_lecture(actual_xy.x))
+      plotting_f = partial(plot_midpoint, f=self.newton_f_lecture, a=a, b=b, star_point=star_point, eps_point=eps_point, k_points=actual_points, title='f, Ньютон')
+      draw_single_plot(plotting_f=plotting_f)
 
   def test_marq_lecture_min(self):
     f = lambda x: x * math.atan(x) - 1 / 2 * math.log(1 + x**2)
