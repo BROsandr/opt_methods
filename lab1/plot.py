@@ -87,3 +87,33 @@ def draw_single_plot(plotting_f: Callable):
   ax.legend()
   ax.grid()
   plt.show()
+
+def plot_tangent(ax: Axes, point: Point, slope, a, b):
+  tangent_line = lambda x: point.y + slope * (x - point.x)
+
+  x = np.arange(a, b, 0.001)
+  y = [tangent_line(xi) for xi in x]
+
+  ax.plot(x, y)
+
+
+def plot_midpoint(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point, eps_point: Point, k_points: list[Point], eps):
+  x = np.arange(a, b, 0.001)
+  y = [f(xi) for xi in x]
+
+  ax.plot(x, y)
+
+  answer_point = eps_point
+  points_x = [point.x for point in k_points]
+  points_y = [f(point.x) for point in k_points]
+  ax.scatter(points_x, points_y, c='b', label='$x_k$')
+  wings = (b - a) / 10
+  for i, (point, yi) in enumerate(zip(k_points, points_y)):
+    ax.text(point.x, yi, f'{i+1}', fontsize=12, ha='left')
+    plot_tangent(ax=ax, point=Point(x=point.x, y=yi), slope=point.y, a=point.x-wings, b=point.x+wings)
+
+  ax.scatter(star_point.x, star_point.y, c='r', label='$x^*$')
+  ax.scatter(answer_point.x, answer_point.y, c='c', label='$x_ε$')
+
+  ax.set(xlabel='x', ylabel='y',
+        title='Средняя точка')
