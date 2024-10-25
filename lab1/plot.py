@@ -118,3 +118,30 @@ def plot_midpoint(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point, ep
 
   ax.set(xlabel='x', ylabel='y',
         title=title)
+
+def plot_chord(ax: Axes, fd1: Callable[[Any], Any], a, b, star_point: Point, eps_point: Point, k_points: list[Point]):
+  x = np.arange(a, b, 0.001)
+  y = [fd1(xi) for xi in x]
+
+  ax.plot(x, y)
+
+  answer_point = eps_point
+  points_x = [point.x for point in k_points]
+  points_y = [fd1(point.x) for point in k_points]
+  ax.scatter(points_x, points_y, c='b', label='$x_k$')
+
+  for i, point in enumerate(k_points):
+    ax.plot([a, b], [fd1(a), fd1(b)])
+    ax.text(point.x, point.y, f'{i+1}', fontsize=12, ha='left')
+    ax.plot([point.x, point.x], [0, point.y], linestyle='dashed')
+
+    if point.y > 0:
+      b = point.x
+    else:
+      a = point.x
+
+  ax.scatter(star_point.x, fd1(star_point.x), c='r', label='$x^*$')
+  ax.scatter(answer_point.x, fd1(answer_point.x), c='c', label='$x_ε$')
+
+  ax.set(xlabel='x', ylabel='y',
+        title='Хорды')
