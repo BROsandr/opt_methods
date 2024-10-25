@@ -220,11 +220,9 @@ def chord(f: Callable[[Any], Any], a, b, eps)->Point:
     if fx > 0:
       b = x_tilda
       fb = fx
-      fa = f(a)
     else:
       a = x_tilda
       fa = fx
-      fb = f(b)
 
 def newton(fd1: Callable[[Any], Any], fd2: Callable[[Any], Any],
            x0: Any,	eps, use_tau=False, f=None, kmax: int=1000) -> Point:

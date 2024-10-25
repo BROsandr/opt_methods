@@ -276,9 +276,9 @@ class TestChord(unittest.TestCase):
     chord(f=log_points, a=0, b=1, eps=eps)
     actual_points = log_points.points
 
-    self.assertEqual(len(expected_points) + 7, len(actual_points))
+    self.assertEqual(len(expected_points) + 2, len(actual_points))
 
-    for i, actual_point in enumerate(actual_points[2::2]):
+    for i, actual_point in enumerate(actual_points[2:]):
       with self.subTest(i=i):
         self.assertTrue(math.isclose(a=expected_points[i].x, b=actual_point.x, abs_tol=1e-3))
         self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_point.y, abs_tol=1e-3))
