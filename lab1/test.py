@@ -319,14 +319,9 @@ class TestChord(unittest.TestCase):
         self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_point.y, abs_tol=1e-3))
 
     if should_draw(self):
-      fig, (ax1, ax2) = plt.subplots(1, 2)
-      plot_chord(ax=ax2, fd1=f_lecture_deriv, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points)
-      plot_midpoint(ax=ax1, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points, title='f, Хорды')
-      ax1.legend()
-      ax1.grid()
-      ax2.legend()
-      ax2.grid()
-      plt.show()
+      plotting_f_left = partial(plot_midpoint, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points, title='f, Хорды')
+      plotting_f_right = partial(plot_chord, fd1=f_lecture_deriv, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points)
+      draw_double_plot(plotting_f_left=plotting_f_left, plotting_f_right=plotting_f_right)
 
 class TestNewtonRaphson(unittest.TestCase):
   @staticmethod

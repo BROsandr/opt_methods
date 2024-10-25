@@ -90,6 +90,16 @@ def draw_single_plot(plotting_f: Callable):
   ax.grid()
   plt.show()
 
+def draw_double_plot(plotting_f_left: Callable, plotting_f_right: Callable):
+  fig, (ax1, ax2) = plt.subplots(1, 2)
+  plotting_f_left(ax=ax1)
+  plotting_f_right(ax=ax2)
+  ax1.legend()
+  ax1.grid()
+  ax2.legend()
+  ax2.grid()
+  plt.show()
+
 def plot_tangent(ax: Axes, point: Point, slope, a, b):
   tangent_line = lambda x: point.y + slope * (x - point.x)
 
