@@ -92,19 +92,19 @@ def golden_ratio(f: Callable[[Any], Any], a, b, eps)->Point:
   tau = (math.sqrt(5) - 1) / 2
   eps_n = (b - a) / 2
 
-  while eps_n <= eps:
+  while eps_n > eps:
     if y1 <= y2:
       b = x2
       x2 = x1
       y2 = y1
-      x1 = b - tau * (b - a)
+      x1 = a + b - x2
 
       y1 = f(x1)
     else:
       a = x1
       x1 = x2
       y1 = y2
-      x2 = b - tau * (b - a)
+      x2 = a + b - x1
 
       y2 = f(x2)
 
@@ -114,16 +114,41 @@ def golden_ratio(f: Callable[[Any], Any], a, b, eps)->Point:
 
   return Point(x=x_min, y=f(x_min))
 
-def parabola(f: Callable[[Any], Any], a, b, eps)->Point:
+def get_init_points_gr(f: Callable[[Any], Any], a, b)->list[Point]:
+  assert a <= b
+
+  x1 = a + (3 - math.sqrt(5)) / 2 * (b - a)
+  x2 = a + (math.sqrt(5) - 1) / 2 * (b - a)
+
+  y1 = f(x1)
+  y2 = f(x2)
+
+  ret_points = None
+
+  if y1 <= y2:
+    ret_points = [Point(x=a, y=None), Point(x=x1, y=y1), Point(x=x2, y=y2)]
+  else:
+    ret_points = [Point(x=x1, y=y1), Point(x=x2, y=y2), Point(x=b, y=None)]
+
+  assert ret_points[0].x < ret_points[1].x < ret_points[2].x
+
+  return ret_points
+
+def get_fixed_init_points(*args, **kwargs):
+  return (Point(x=0.25, y=None), Point(x=0.5, y=None), Point(x=0.75, y=None))
+
+def parabola(f: Callable[[Any], Any], a, b, eps, get_init_points=get_fixed_init_points)->Point:
   assert a <= b
   assert eps > 0
 
-  get_init_points = lambda: (0.25, 0.5, 0.75)
+  init_points = get_init_points(f=f, a=a, b=b)
+  for i in range(len(init_points)):
+    if init_points[i].y is None:
+      init_points[i].y = f(init_points[i].x)
 
-  x1, x2, x3 = get_init_points()
+  x1, x2, x3 = init_points[0].x, init_points[1].x, init_points[2].x
+  f1, f2, f3 = init_points[0].y, init_points[1].y, init_points[2].y
   assert x1 < x2 < x3
-
-  f1, f2, f3 = f(x1), f(x2), f(x3)
   assert f1 >= f2 <= f3
 
   old_x_min = None
@@ -156,10 +181,8 @@ def parabola(f: Callable[[Any], Any], a, b, eps)->Point:
         x2 = x_min
         f2 = f_min
       else:
-        x1 = x2
-        f1 = f2
-        x2 = x_min
-        f2 = f_min
+        x3 = x_min
+        f3 = f_min
 
     old_x_min = x_min
 
@@ -197,23 +220,25 @@ def chord(f: Callable[[Any], Any], a, b, eps)->Point:
     if fx > 0:
       b = x_tilda
       fb = fx
-      fa = f(a)
     else:
       a = x_tilda
       fa = fx
-      fb = f(b)
 
-def newton(fd1: Callable[[Any], Any], fd2: Callable[[Any], Any], x0: Any,
-	eps, use_tau=False, f=None, kmax: int=1000) -> Any:
+def newton(fd1: Callable[[Any], Any], fd2: Callable[[Any], Any],
+           x0: Any,	eps, use_tau=False, f=None, kmax: int=1000) -> Point:
   """
   solves f'(x) = 0 by Newton's method with precision eps
   :param fd1: f'
   :param fd2: f''
   :param x0: starting point
   :param eps: precision wanted
-  :return: root of f'(x) = 0
+  :return: root Point(x, y) of f'(x) = 0
   """
+
+  assert eps > 0
+
   x, i = x0, 0
+  y = f(x) if f is not None else None
   tau = 1.0
   mu = 0
 
@@ -232,17 +257,23 @@ def newton(fd1: Callable[[Any], Any], fd2: Callable[[Any], Any], x0: Any,
 
       x_new = x - tau * yd1 / (yd2 + mu)
     except ZeroDivisionError as e:
-      raise ValueError(f"The method doesn't converge after the iteration: №{i} with x0: {x0}, eps: {eps}, tau: {tau}") from e
+      raise ValueError(f"The method doesn't converge after the iteration: №{i} with x0: {x0}, ε: {eps}, τ: {tau}, μ: {mu}") from e
 
     if f is not None:
-      if f(x_new) < f(x):
+      y_new = f(x_new)
+      if y_new < y:
         mu /= 2
       else:
         mu *= 2
+
+      y = y_new
 
     x = x_new
     i += 1
 
     if abs(yd1) <= eps: break
 
-  return x
+  if i == kmax:
+    raise ValueError(f"The method didn't achieve the specified ε after the max iteration: №{i} with x0: {x0}, ε: {eps}, τ: {tau}, μ: {mu}")
+
+  return Point(x=x, y=y)

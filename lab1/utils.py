@@ -1,7 +1,7 @@
 from typing import Callable, Any
 from dataclasses import dataclass
 
-@dataclass
+@dataclass(order=True)
 class Point:
   x: Any
   y: Any

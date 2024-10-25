@@ -1,8 +1,14 @@
+from functools import partial
 import unittest
 import math
 from algos import *
+from utils import *
 from typing import Callable
 from utils import Point, LogPointsWrap
+from plot import *
+
+def should_draw(test_case: unittest.TestCase)->bool:
+  return True
 
 def get_y_abs_tol(f: Callable, x, eps):
   assert eps > 0
@@ -51,8 +57,12 @@ class TestBruteFroce(unittest.TestCase):
 
     eps = 0.1
     log_points = LogPointsWrap(f_lecture)
-    brute_force(f=log_points, a=0, b=1, eps=eps)
+    eps_point = brute_force(f=log_points, a=0, b=1, eps=eps)
     actual_points = log_points.points
+
+    if should_draw(self):
+      plotting_f = partial(plot_brute_force, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points, eps=eps, title='Перебор')
+      draw_single_plot(plotting_f=plotting_f)
 
     self.assertEqual(len(expected_points), len(actual_points))
 
@@ -79,8 +89,12 @@ class TestBitwiseSearch(unittest.TestCase):
 
     eps = 0.1
     log_points = LogPointsWrap(f_lecture)
-    bitwise_search(f=log_points, a=0, b=1, eps=eps)
+    eps_point = bitwise_search(f=log_points, a=0, b=1, eps=eps)
     actual_points = log_points.points
+
+    if should_draw(self):
+      plotting_f = partial(plot_brute_force, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points, eps=eps, title='Поразрядный поиск')
+      draw_single_plot(plotting_f=plotting_f)
 
     self.assertEqual(len(expected_points), len(actual_points))
 
@@ -147,8 +161,12 @@ class TestDichotomy(unittest.TestCase):
 
     eps = 0.1
     log_points = LogPointsWrap(f_lecture)
-    dichotomy(f=log_points, a=0, b=1, eps=eps)
+    eps_point = dichotomy(f=log_points, a=0, b=1, eps=eps)
     actual_points = log_points.points
+
+    if should_draw(self):
+      plotting_f = partial(plot_brute_force, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points, eps=eps, title='Дихотомия')
+      draw_single_plot(plotting_f=plotting_f)
 
     self.assertEqual(len(expected_points), len(actual_points))
 
@@ -158,8 +176,29 @@ class TestDichotomy(unittest.TestCase):
         self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_points[i].y, abs_tol=1e-3))
 
 class TestGoldenRatio(unittest.TestCase):
-  def test_lecture_min(self):
-    test_lecture_min(test_obj=self, method=golden_ratio, eps=0.1)
+  def f(self, x):
+    return 6 * x**2 + 3*x + 5
+
+  MIN_POINT = Point(x=-1/4, y=37/8)
+
+  def test_parabola(self):
+    f = self.f
+    log_points = LogPointsWrap(f)
+    eps = 0.1
+    a, b = -3, 1
+
+    eps_point = golden_ratio(f=log_points, a=-3, b=1, eps=eps)
+
+    atol = get_y_abs_tol(f=log_points, x=self.MIN_POINT.x, eps=eps)
+
+    self.assertTrue(math.isclose(a=eps_point.x, b=self.MIN_POINT.x, abs_tol=eps))
+    self.assertTrue(math.isclose(a=eps_point.y, b=self.MIN_POINT.y, abs_tol=atol))
+
+    actual_points = log_points.points
+
+    if should_draw(self):
+      plotting_f = partial(plot_brute_force, f=f, a=a, b=b, star_point=self.MIN_POINT, eps_point=eps_point, k_points=actual_points, eps=eps, title='Золотое сечение')
+      draw_single_plot(plotting_f=plotting_f)
 
 class TestParabola(unittest.TestCase):
   def test_lecture_min(self):
@@ -186,6 +225,7 @@ class TestParabola(unittest.TestCase):
     eps = 0.025
     log_points = LogPointsWrap(f_lecture)
     min_point = parabola(f=log_points, a=0, b=1, eps=eps)
+
     actual_points = log_points.points + [min_point]
 
     self.assertEqual(len(expected_points), len(actual_points))
@@ -197,6 +237,21 @@ class TestParabola(unittest.TestCase):
 
     self.assertTrue(math.isclose(a=actual_points[-1].x, b=expected_points[-1].x, abs_tol=1e-4))
     self.assertIsNone(actual_points[-1].y)
+
+    if should_draw(self):
+      plotting_f = partial(plot_parabola_meth, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=min_point, k_points=log_points.points, eps=eps)
+      draw_single_plot(plotting_f=plotting_f)
+
+  def test_init_points_gr(self):
+    f = f_lecture
+    eps = 0.025
+
+    actual_xy = parabola(f=f, a=0, b=1, eps=eps, get_init_points=get_init_points_gr)
+
+    atol = get_y_abs_tol(f=f, x=LECTURE_MIN.x, eps=eps)
+
+    self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
+    self.assertIsNone(actual_xy.y)
 
 class TestMidpoint(unittest.TestCase):
   def test_lecture_min(self):
@@ -218,7 +273,7 @@ class TestMidpoint(unittest.TestCase):
 
     eps = 0.02
     log_points = LogPointsWrap(f_lecture_deriv)
-    midpoint(f=log_points, a=0, b=1, eps=eps)
+    eps_point = midpoint(f=log_points, a=0, b=1, eps=eps)
     actual_points = log_points.points
 
     self.assertEqual(len(expected_points), len(actual_points))
@@ -227,6 +282,10 @@ class TestMidpoint(unittest.TestCase):
       with self.subTest(i=i):
         self.assertTrue(math.isclose(a=expected_points[i].x, b=actual_points[i].x, abs_tol=1e-3))
         self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_points[i].y, abs_tol=1e-3))
+
+    if should_draw(self):
+      plotting_f = partial(plot_midpoint, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points)
+      draw_single_plot(plotting_f=plotting_f)
 
 class TestChord(unittest.TestCase):
   def test_lecture_min(self):
@@ -249,17 +308,26 @@ class TestChord(unittest.TestCase):
 
     eps = 0.05
     log_points = LogPointsWrap(f_lecture_deriv)
-    chord(f=log_points, a=0, b=1, eps=eps)
+    eps_point = chord(f=log_points, a=0, b=1, eps=eps)
     actual_points = log_points.points
 
-    self.assertEqual(len(expected_points) + 7, len(actual_points))
+    self.assertEqual(len(expected_points) + 2, len(actual_points))
 
-    for i, actual_point in enumerate(actual_points[2::2]):
+    for i, actual_point in enumerate(actual_points[2:]):
       with self.subTest(i=i):
         self.assertTrue(math.isclose(a=expected_points[i].x, b=actual_point.x, abs_tol=1e-3))
         self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_point.y, abs_tol=1e-3))
 
+    if should_draw(self):
+      plotting_f_left = partial(plot_midpoint, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points, title='f, Хорды')
+      plotting_f_right = partial(plot_chord, fd1=f_lecture_deriv, a=0, b=1, star_point=LECTURE_MIN, eps_point=eps_point, k_points=actual_points)
+      draw_double_plot(plotting_f_left=plotting_f_left, plotting_f_right=plotting_f_right)
+
 class TestNewtonRaphson(unittest.TestCase):
+  @staticmethod
+  def newton_f_lecture(x):
+    return x * math.atan(x) - 1 / 2 * math.log(1 + x**2)
+
   @staticmethod
   def newton_f_d1_lecture(x):
     return math.atan(x)
@@ -274,9 +342,10 @@ class TestNewtonRaphson(unittest.TestCase):
     eps = self.EPS
     x0 = 1
 
-    x = newton(fd1=self.newton_f_d1_lecture, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps)
+    actual_xy = newton(fd1=self.newton_f_d1_lecture, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps)
 
-    self.assertAlmostEqual(x, 0)
+    self.assertAlmostEqual(actual_xy.x, 0)
+    self.assertIsNone(actual_xy.y)
 
   def test_newt_lecture_all_points(self):
     x0 = 1
@@ -290,7 +359,7 @@ class TestNewtonRaphson(unittest.TestCase):
 
     eps = self.EPS
     log_points = LogPointsWrap(self.newton_f_d1_lecture)
-    newton(fd1=log_points, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps)
+    eps_point = newton(fd1=log_points, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps)
     actual_points = log_points.points
 
     self.assertEqual(len(expected_points), len(actual_points))
@@ -306,6 +375,24 @@ class TestNewtonRaphson(unittest.TestCase):
     self.assertAlmostEqual(expected_points[4].x, actual_points[4].x, places=6)
     self.assertAlmostEqual(expected_points[4].y, actual_points[4].y, places=6)
 
+    if should_draw(self):
+      sorted_k_x_points = sorted(map(lambda point: point.x, actual_points))
+      wings = (max(sorted_k_x_points) - min(sorted_k_x_points)) / 10
+      a = min(sorted_k_x_points) - wings
+      b = max(sorted_k_x_points) + wings
+      star_point = Point(0, self.newton_f_lecture(0))
+      eps_point = Point(eps_point.x, self.newton_f_lecture(eps_point.x))
+      plotting_f_left = partial(plot_midpoint, f=self.newton_f_lecture, a=a, b=b, star_point=star_point, eps_point=eps_point, k_points=actual_points, title='f, Ньютон')
+      plotting_f_right = partial(
+        plot_newton,
+        fd1=self.newton_f_d1_lecture,
+        fd2=self.newton_f_d2_lecture,
+        x0=x0,
+        star_point=star_point,
+        eps_point=eps_point,
+        k_points=actual_points
+      )
+      draw_double_plot(plotting_f_left=plotting_f_left, plotting_f_right=plotting_f_right)
 
   def test_newt_diverge(self):
     eps = self.EPS
@@ -317,10 +404,23 @@ class TestNewtonRaphson(unittest.TestCase):
   def test_newt_raph_lecture_min(self):
     x0 = 3
     eps = self.EPS
+    log_points = LogPointsWrap(self.newton_f_d1_lecture)
 
-    x = newton(fd1=self.newton_f_d1_lecture, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps, use_tau=True)
+    actual_xy = newton(fd1=log_points, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps, use_tau=True)
+    actual_points = log_points.points
 
-    self.assertAlmostEqual(x, 0)
+    self.assertAlmostEqual(actual_xy.x, 0)
+    self.assertIsNone(actual_xy.y)
+
+    if should_draw(self):
+      sorted_k_x_points = sorted(map(lambda point: point.x, actual_points))
+      wings = (max(sorted_k_x_points) - min(sorted_k_x_points)) / 10
+      a = min(sorted_k_x_points) - wings
+      b = max(sorted_k_x_points) + wings
+      star_point = Point(0, self.newton_f_lecture(0))
+      eps_point = Point(actual_xy.x, self.newton_f_lecture(actual_xy.x))
+      plotting_f = partial(plot_midpoint, f=self.newton_f_lecture, a=a, b=b, star_point=star_point, eps_point=eps_point, k_points=actual_points, title='f, Ньютон')
+      draw_single_plot(plotting_f=plotting_f)
 
   def test_marq_lecture_min(self):
     f = lambda x: x * math.atan(x) - 1 / 2 * math.log(1 + x**2)
@@ -328,9 +428,48 @@ class TestNewtonRaphson(unittest.TestCase):
     x0 = 3
     eps = self.EPS
 
-    x = newton(fd1=self.newton_f_d1_lecture, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps, f=f)
+    actual_xy = newton(fd1=self.newton_f_d1_lecture, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps, f=f)
 
-    self.assertAlmostEqual(x, 0)
+    self.assertAlmostEqual(actual_xy.x, 0)
+    self.assertAlmostEqual(actual_xy.y, 0)
+
+  @staticmethod
+  def fd1_lecture2(x):
+    return 2 * x - 16 / x**2
+
+  @staticmethod
+  def fd2_lecture2(x):
+    return 2 + 32 / x**3
+
+  def test_newt_lecture_min2(self):
+    eps = self.EPS
+    x0 = 1
+
+    actual_xy = newton(fd1=self.fd1_lecture2, fd2=self.fd2_lecture2, x0=x0, eps=eps)
+
+    self.assertAlmostEqual(actual_xy.x, 2)
+    self.assertIsNone(actual_xy.y)
+
+  def test_newt_lecture2_all_points(self):
+    x0 = 1
+    expected_points = [
+      Point(x=1.0000, y=None),
+      Point(x=1.4118, y=None),
+      Point(x=1.8010, y=None),
+      Point(x=1.9790, y=None),
+      Point(x=1.9998, y=None),
+    ]
+
+    eps = self.EPS
+    log_points = LogPointsWrap(self.fd1_lecture2)
+    newton(fd1=log_points, fd2=self.fd2_lecture2, x0=x0, eps=eps)
+    actual_points = log_points.points
+
+    self.assertAlmostEqual(expected_points[0].x, actual_points[0].x, places=4)
+    self.assertAlmostEqual(expected_points[1].x, actual_points[1].x, places=4)
+    self.assertAlmostEqual(expected_points[2].x, actual_points[2].x, places=3)
+    self.assertAlmostEqual(expected_points[3].x, actual_points[3].x, places=4)
+    self.assertAlmostEqual(expected_points[4].x, actual_points[4].x, places=4)
 
 if __name__ == '__main__':
     unittest.main()
