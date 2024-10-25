@@ -242,6 +242,17 @@ class TestParabola(unittest.TestCase):
       plotting_f = partial(plot_parabola_meth, f=f_lecture, a=0, b=1, star_point=LECTURE_MIN, eps_point=min_point, k_points=log_points.points, eps=eps)
       draw_single_plot(plotting_f=plotting_f)
 
+  def test_init_points_gr(self):
+    f = f_lecture
+    eps = 0.025
+
+    actual_xy = parabola(f=f, a=0, b=1, eps=eps, get_init_points=get_init_points_gr)
+
+    atol = get_y_abs_tol(f=f, x=LECTURE_MIN.x, eps=eps)
+
+    self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
+    self.assertIsNone(actual_xy.y)
+
 class TestMidpoint(unittest.TestCase):
   def test_lecture_min(self):
     eps = 0.02
