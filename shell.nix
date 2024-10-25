@@ -9,6 +9,7 @@ in pkgs.mkShell rec {
   buildInputs = with pkgs; [
     pythonPackages.numpy
     pythonPackages.matplotlib
+    pythonPackages.ipykernel
 
     # A Python interpreter including the 'venv' module is required to bootstrap
     # the environment.
