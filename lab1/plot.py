@@ -130,7 +130,10 @@ def plot_chord(ax: Axes, fd1: Callable[[Any], Any], a, b, star_point: Point, eps
   points_y = [fd1(point.x) for point in k_points]
   ax.scatter(points_x, points_y, c='b', label='$x_k$')
 
-  for i, point in enumerate(k_points):
+  ax.text(k_points[0].x, k_points[0].y, f'1', fontsize=12, ha='left')
+  ax.text(k_points[1].x, k_points[1].y, f'2', fontsize=12, ha='left')
+
+  for i, point in enumerate(k_points[2:], start=2):
     ax.plot([a, b], [fd1(a), fd1(b)])
     ax.text(point.x, point.y, f'{i+1}', fontsize=12, ha='left')
     ax.plot([point.x, point.x], [0, point.y], linestyle='dashed')
