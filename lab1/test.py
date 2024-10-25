@@ -382,7 +382,7 @@ class TestNewtonRaphson(unittest.TestCase):
       b = max(sorted_k_x_points) + wings
       star_point = Point(0, self.newton_f_lecture(0))
       eps_point = Point(eps_point.x, self.newton_f_lecture(eps_point.x))
-      plotting_f_left = partial(plot_midpoint, f=self.newton_f_lecture, a=a, b=b, star_point=star_point, eps_point=eps_point, k_points=actual_points, title='f, Хорды')
+      plotting_f_left = partial(plot_midpoint, f=self.newton_f_lecture, a=a, b=b, star_point=star_point, eps_point=eps_point, k_points=actual_points, title='f, Ньютон')
       plotting_f_right = partial(
         plot_newton,
         fd1=self.newton_f_d1_lecture,
