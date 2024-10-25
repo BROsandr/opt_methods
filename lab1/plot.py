@@ -97,7 +97,7 @@ def plot_tangent(ax: Axes, point: Point, slope, a, b):
   ax.plot(x, y)
 
 
-def plot_midpoint(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point, eps_point: Point, k_points: list[Point], eps):
+def plot_midpoint(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point, eps_point: Point, k_points: list[Point]):
   x = np.arange(a, b, 0.001)
   y = [f(xi) for xi in x]
 
