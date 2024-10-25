@@ -51,7 +51,9 @@ def plot_parabola(ax: Axes, points: list[Point]):
 def plot_parabola_meth(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point, eps_point: Point, k_points: list[Point], eps):
   title = 'Парабола'
   k_points_copy = deepcopy(k_points)
-  plot_brute_force(ax=ax, f=f, a=a, b=b, star_point=star_point, eps_point=eps_point, k_points=k_points_copy, eps=eps, title=title)
+  eps_point_copy = deepcopy(eps_point)
+  eps_point_copy.y = eps_point_copy.y if eps_point_copy.y is not None else f(eps_point_copy.x)
+  plot_brute_force(ax=ax, f=f, a=a, b=b, star_point=star_point, eps_point=eps_point_copy, k_points=k_points_copy, eps=eps, title=title)
 
   parabola_points = k_points_copy[:3]
   plot_parabola(ax=ax, points=parabola_points)
