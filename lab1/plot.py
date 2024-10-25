@@ -3,6 +3,7 @@ from matplotlib.axes import Axes
 import matplotlib.pyplot as plt
 from utils import Point
 from typing import Callable, Any
+from copy import deepcopy
 
 def plot_x_eps(ax: Axes, origin: Point, eps):
   ax.axvspan(origin.x - eps, origin.x + eps, color='lightcoral', alpha=0.3)  # lightcoral is a light red color
@@ -46,12 +47,13 @@ def plot_parabola(ax: Axes, points: list[Point]):
 
 def plot_parabola_meth(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point, eps_point: Point, k_points: list[Point], eps):
   title = 'Парабола'
-  plot_brute_force(ax=ax, f=f, a=a, b=b, star_point=star_point, eps_point=eps_point, k_points=k_points, eps=eps, title=title)
+  k_points_copy = deepcopy(k_points)
+  plot_brute_force(ax=ax, f=f, a=a, b=b, star_point=star_point, eps_point=eps_point, k_points=k_points_copy, eps=eps, title=title)
 
-  parabola_points = k_points[:3]
+  parabola_points = k_points_copy[:3]
   plot_parabola(ax=ax, points=parabola_points)
 
-  for point in k_points[3:]:
+  for point in k_points_copy[3:]:
     x_min = point.x
     f_min = point.y
     if x_min < parabola_points[1].x:
@@ -103,7 +105,7 @@ def plot_midpoint(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point, ep
 
   ax.plot(x, y)
 
-  answer_point = eps_point
+  answer_point = deepcopy(eps_point)
   points_x = [point.x for point in k_points]
   points_y = [f(point.x) for point in k_points]
   ax.scatter(points_x, points_y, c='b', label='$x_k$')
@@ -125,7 +127,7 @@ def plot_chord(ax: Axes, fd1: Callable[[Any], Any], a, b, star_point: Point, eps
 
   ax.plot(x, y)
 
-  answer_point = eps_point
+  answer_point = deepcopy(eps_point)
   points_x = [point.x for point in k_points]
   points_y = [fd1(point.x) for point in k_points]
   ax.scatter(points_x, points_y, c='b', label='$x_k$')
