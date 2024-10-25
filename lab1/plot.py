@@ -21,9 +21,12 @@ def plot_brute_force(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point,
   for i, (xi, yi) in enumerate(zip(points_x, points_y)):
     ax.text(xi, yi, f'{i+1}', fontsize=12, ha='left')
 
-  ax.scatter(star_point.x, star_point.y, c='r', label='$x^*$')
   plot_x_eps(ax=ax, origin=star_point, eps=eps)
-  ax.scatter(answer_point.x, answer_point.y, c='c', label='$x_ε$')
+  if star_point.x == answer_point.x:
+    ax.scatter(star_point.x, star_point.y, c='r', label='$x^*, x_ε$')
+  else:
+    ax.scatter(star_point.x, star_point.y, c='r', label='$x^*$')
+    ax.scatter(answer_point.x, answer_point.y, c='c', label='$x_ε$')
 
   ax.set(xlabel='x', ylabel='y',
         title=title)
@@ -124,9 +127,13 @@ def plot_midpoint(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point, ep
     ax.text(point.x, yi, f'{i+1}', fontsize=12, ha='left')
     plot_tangent(ax=ax, point=Point(x=point.x, y=yi), slope=point.y, a=point.x-wings, b=point.x+wings)
 
-  ax.scatter(star_point.x, star_point.y, c='r', label='$x^*$')
   answer_point.y = answer_point.y if answer_point.y is not None else f(answer_point.x)
-  ax.scatter(answer_point.x, answer_point.y, c='c', label='$x_ε$')
+
+  if star_point.x == answer_point.x:
+    ax.scatter(answer_point.x, answer_point.y, c='r', label='$x^*, x_ε$')
+  else:
+    ax.scatter(star_point.x, star_point.y, c='r', label='$x^*$')
+    ax.scatter(answer_point.x, answer_point.y, c='c', label='$x_ε$')
 
   ax.set(xlabel='x', ylabel='y',
         title=title)
@@ -155,8 +162,11 @@ def plot_chord(ax: Axes, fd1: Callable[[Any], Any], a, b, star_point: Point, eps
     else:
       a = point.x
 
-  ax.scatter(star_point.x, fd1(star_point.x), c='r', label='$x^*$')
-  ax.scatter(answer_point.x, fd1(answer_point.x), c='c', label='$x_ε$')
+  if star_point.x == answer_point.x:
+    ax.scatter(star_point.x, fd1(star_point.x), c='r', label='$x^*, x_ε$')
+  else:
+    ax.scatter(star_point.x, fd1(star_point.x), c='r', label='$x^*$')
+    ax.scatter(answer_point.x, fd1(answer_point.x), c='c', label='$x_ε$')
 
   ax.set(xlabel='x', ylabel='y',
         title="f', Хорды")
@@ -192,8 +202,12 @@ def plot_newton(ax: Axes,
   for point in k_points[1:]:
     ax.plot([point.x, point.x], [0, point.y], linestyle='dashed')
 
-  ax.scatter(answer_point.x, fd1(answer_point.x), c='c', label='$x_ε$')
-  ax.scatter(star_point.x, fd1(star_point.x), c='r', label='$x^*$')
+  if answer_point.x == star_point.x:
+    ax.scatter(star_point.x, fd1(star_point.x), c='r', label='$x^*, x_ε$')
+  else:
+    ax.scatter(answer_point.x, fd1(answer_point.x), c='c', label='$x_ε$')
+    ax.scatter(star_point.x, fd1(star_point.x), c='r', label='$x^*$')
+
   ax.scatter(x0, fd1(x0), c='y', label='$x_0$')
 
   ax.set(xlabel='x', ylabel='y',
