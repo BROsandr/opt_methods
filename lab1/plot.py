@@ -150,3 +150,41 @@ def plot_chord(ax: Axes, fd1: Callable[[Any], Any], a, b, star_point: Point, eps
 
   ax.set(xlabel='x', ylabel='y',
         title="f', Хорды")
+
+def plot_newton(ax: Axes,
+                fd1: Callable[[Any], Any],
+                fd2: Callable[[Any], Any],
+                x0,
+                star_point: Point,
+                eps_point: Point,
+                k_points: list[Point]):
+  sorted_k_x_points = sorted(map(lambda point: point.x, k_points))
+  wings = (max(sorted_k_x_points) - min(sorted_k_x_points)) / 10
+  x = np.arange(min(sorted_k_x_points), max(sorted_k_x_points), 0.001)
+  y = [fd1(xi) for xi in x]
+
+  ax.plot(x, y)
+
+  answer_point = deepcopy(eps_point)
+  points_x = [point.x for point in k_points]
+  points_y = [fd1(point.x) for point in k_points]
+  ax.scatter(points_x, points_y, c='b', label='$x_k$')
+
+  for i, point in enumerate(k_points):
+    ax.text(point.x, point.y, f'{i+1}', fontsize=12, ha='left')
+
+  for i, point in enumerate(k_points[:-1]):
+    ax.text(point.x, point.y, f'{i+1}', fontsize=12, ha='left')
+    a = point.x - wings if point.y < 0 else k_points[i+1].x - wings
+    b = point.x + wings if point.y > 0 else k_points[i+1].x + wings
+    plot_tangent(ax=ax, point=Point(x=point.x, y=point.y), slope=fd2(point.x), a=a, b=b)
+
+  for point in k_points[1:]:
+    ax.plot([point.x, point.x], [0, point.y], linestyle='dashed')
+
+  ax.scatter(answer_point.x, fd1(answer_point.x), c='c', label='$x_ε$')
+  ax.scatter(star_point.x, fd1(star_point.x), c='r', label='$x^*$')
+  ax.scatter(x0, fd1(x0), c='y', label='$x_0$')
+
+  ax.set(xlabel='x', ylabel='y',
+        title="f', Ньютон")

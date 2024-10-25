@@ -330,6 +330,10 @@ class TestChord(unittest.TestCase):
 
 class TestNewtonRaphson(unittest.TestCase):
   @staticmethod
+  def newton_f_lecture(x):
+    return x * math.atan(x) - 1 / 2 * math.log(1 + x**2)
+
+  @staticmethod
   def newton_f_d1_lecture(x):
     return math.atan(x)
 
@@ -360,7 +364,7 @@ class TestNewtonRaphson(unittest.TestCase):
 
     eps = self.EPS
     log_points = LogPointsWrap(self.newton_f_d1_lecture)
-    newton(fd1=log_points, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps)
+    eps_point = newton(fd1=log_points, fd2=self.newton_f_d2_lecture, x0=x0, eps=eps)
     actual_points = log_points.points
 
     self.assertEqual(len(expected_points), len(actual_points))
@@ -375,6 +379,18 @@ class TestNewtonRaphson(unittest.TestCase):
     self.assertAlmostEqual(expected_points[3].y, actual_points[3].y, places=5)
     self.assertAlmostEqual(expected_points[4].x, actual_points[4].x, places=6)
     self.assertAlmostEqual(expected_points[4].y, actual_points[4].y, places=6)
+
+    if should_draw(self):
+      plotting_f = partial(
+        plot_newton,
+        fd1=self.newton_f_d1_lecture,
+        fd2=self.newton_f_d2_lecture,
+        x0=x0,
+        star_point=Point(0, self.newton_f_lecture(0)),
+        eps_point=Point(eps_point.x, self.newton_f_lecture(eps_point.x)),
+        k_points=actual_points
+      )
+      draw_single_plot(plotting_f=plotting_f)
 
 
   def test_newt_diverge(self):
