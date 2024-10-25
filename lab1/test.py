@@ -211,6 +211,17 @@ class TestParabola(unittest.TestCase):
     self.assertTrue(math.isclose(a=actual_points[-1].x, b=expected_points[-1].x, abs_tol=1e-4))
     self.assertIsNone(actual_points[-1].y)
 
+  def test_init_points_gr(self):
+    f = f_lecture
+    eps = 0.025
+
+    actual_xy = parabola(f=f, a=0, b=1, eps=eps, get_init_points=get_init_points_gr)
+
+    atol = get_y_abs_tol(f=f, x=LECTURE_MIN.x, eps=eps)
+
+    self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
+    self.assertIsNone(actual_xy.y)
+
 class TestMidpoint(unittest.TestCase):
   def test_lecture_min(self):
     eps = 0.02

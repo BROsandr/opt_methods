@@ -114,16 +114,41 @@ def golden_ratio(f: Callable[[Any], Any], a, b, eps)->Point:
 
   return Point(x=x_min, y=f(x_min))
 
-def parabola(f: Callable[[Any], Any], a, b, eps)->Point:
+def get_init_points_gr(f: Callable[[Any], Any], a, b)->list[Point]:
+  assert a <= b
+
+  x1 = a + (3 - math.sqrt(5)) / 2 * (b - a)
+  x2 = a + (math.sqrt(5) - 1) / 2 * (b - a)
+
+  y1 = f(x1)
+  y2 = f(x2)
+
+  ret_points = None
+
+  if y1 <= y2:
+    ret_points = [Point(x=a, y=None), Point(x=x1, y=y1), Point(x=x2, y=y2)]
+  else:
+    ret_points = [Point(x=x1, y=y1), Point(x=x2, y=y2), Point(x=b, y=None)]
+
+  assert ret_points[0].x < ret_points[1].x < ret_points[2].x
+
+  return ret_points
+
+def get_fixed_init_points(*args, **kwargs):
+  return (Point(x=0.25, y=None), Point(x=0.5, y=None), Point(x=0.75, y=None))
+
+def parabola(f: Callable[[Any], Any], a, b, eps, get_init_points=get_fixed_init_points)->Point:
   assert a <= b
   assert eps > 0
 
-  get_init_points = lambda: (0.25, 0.5, 0.75)
+  init_points = get_init_points(f=f, a=a, b=b)
+  for i in range(len(init_points)):
+    if init_points[i].y is None:
+      init_points[i].y = f(init_points[i].x)
 
-  x1, x2, x3 = get_init_points()
+  x1, x2, x3 = init_points[0].x, init_points[1].x, init_points[2].x
+  f1, f2, f3 = init_points[0].y, init_points[1].y, init_points[2].y
   assert x1 < x2 < x3
-
-  f1, f2, f3 = f(x1), f(x2), f(x3)
   assert f1 >= f2 <= f3
 
   old_x_min = None
