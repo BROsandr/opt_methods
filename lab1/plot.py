@@ -113,6 +113,7 @@ def plot_midpoint(ax: Axes, f: Callable[[Any], Any], a, b, star_point: Point, ep
     plot_tangent(ax=ax, point=Point(x=point.x, y=yi), slope=point.y, a=point.x-wings, b=point.x+wings)
 
   ax.scatter(star_point.x, star_point.y, c='r', label='$x^*$')
+  answer_point.y = answer_point.y if answer_point.y is not None else f(answer_point.x)
   ax.scatter(answer_point.x, answer_point.y, c='c', label='$x_ε$')
 
   ax.set(xlabel='x', ylabel='y',
