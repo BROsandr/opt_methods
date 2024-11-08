@@ -517,39 +517,37 @@ class TestPolygonal(unittest.TestCase):
     self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
     self.assertTrue(math.isclose(a=actual_xy.y, b=LECTURE_MIN.y, abs_tol=atol))
 
-  # def multi_f1(self, x):
-  #   return math.cos(x) / x**2
-  # def multi_f2(self, x):
-  #   return 1 / 10 * x + 2 * math.sin(4*x)
+  def multi_f1(self, x):
+    return math.cos(x) / x**2
+  def multi_f2(self, x):
+    return 1 / 10 * x + 2 * math.sin(4*x)
 
-  # MULTI_F1_MIN_POINT = Point(x=2.45871, y=-0.128325)
-  # MULTI_F2_MIN_POINT = Point(x=1.1750, y=-1.8823)
+  MULTI_F1_MIN_POINT = Point(x=2.45871, y=-0.128325)
+  MULTI_F2_MIN_POINT = Point(x=1.1750, y=-1.8823)
 
-  # def test_multimodal1(self):
-  #     f = self.multi_f1
-  #     eps = 0.1
-  #     a, b = 1, 12
+  def test_multimodal1(self):
+      f = self.multi_f1
+      eps = 0.000001
+      a, b = 1, 12
 
-  #     actual_xy = brute_force(f=f, a=a, b=b, eps=eps)
-  #     min_point = self.MULTI_F1_MIN_POINT
+      actual_xy = polygonal_chain(f=f, a=a, b=b, eps=eps, get_L=lambda *args, **kwargs: 1)
+      min_point = self.MULTI_F1_MIN_POINT
 
-  #     atol = get_y_abs_tol(f=f, x=min_point.x, eps=eps)
+      self.assertTrue(math.isclose(a=actual_xy.x, b=min_point.x, rel_tol=0.1))
+      self.assertTrue(math.isclose(a=actual_xy.y, b=min_point.y, abs_tol=eps))
 
-  #     self.assertTrue(math.isclose(a=actual_xy.x, b=min_point.x, abs_tol=eps))
-  #     self.assertTrue(math.isclose(a=actual_xy.y, b=min_point.y, abs_tol=atol))
+  def test_multimodal2(self):
+      f = self.multi_f2
+      eps = 0.1
+      a, b = 0, 4
 
-  # def test_multimodal2(self):
-  #     f = self.multi_f2
-  #     eps = 0.1
-  #     a, b = 0, 4
+      actual_xy = polygonal_chain(f=f, a=a, b=b, eps=eps, get_L=lambda *args, **kwargs: 82/10)
+      min_point = self.MULTI_F2_MIN_POINT
 
-  #     actual_xy = brute_force(f=f, a=a, b=b, eps=eps)
-  #     min_point = self.MULTI_F2_MIN_POINT
+      atol = get_y_abs_tol(f=f, x=min_point.x, eps=eps)
 
-  #     atol = get_y_abs_tol(f=f, x=min_point.x, eps=eps)
-
-  #     self.assertTrue(math.isclose(a=actual_xy.x, b=min_point.x, abs_tol=eps))
-  #     self.assertTrue(math.isclose(a=actual_xy.y, b=min_point.y, abs_tol=atol))
+      self.assertTrue(math.isclose(a=actual_xy.x, b=min_point.x, abs_tol=eps))
+      self.assertTrue(math.isclose(a=actual_xy.y, b=min_point.y, abs_tol=atol))
 
 
 if __name__ == '__main__':
