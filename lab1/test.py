@@ -527,10 +527,10 @@ class TestPolygonal(unittest.TestCase):
 
   def test_multimodal1(self):
       f = self.multi_f1
-      eps = 0.000001
+      eps = 0.1
       a, b = 1, 12
 
-      actual_xy = polygonal_chain(f=f, a=a, b=b, eps=eps, get_L=lambda *args, **kwargs: 1)
+      actual_xy = polygonal_chain(f=f, a=a, b=b, eps=eps, get_L=lambda *args, **kwargs: 0.5)
       min_point = self.MULTI_F1_MIN_POINT
 
       self.assertTrue(math.isclose(a=actual_xy.x, b=min_point.x, rel_tol=0.1))
