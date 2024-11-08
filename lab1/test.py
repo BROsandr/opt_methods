@@ -8,7 +8,7 @@ from utils import Point, LogPointsWrap
 from plot import *
 
 def should_draw(test_case: unittest.TestCase)->bool:
-  return True
+  return False
 
 def get_y_abs_tol(f: Callable, x, eps):
   assert eps > 0
@@ -510,7 +510,7 @@ class TestPolygonal(unittest.TestCase):
     f = f_lecture
     eps = 0.1
 
-    actual_xy = polygonal_chain(f=f, a=0, b=1, eps=eps, get_L=lambda *args, **kwargs: -1)
+    actual_xy = polygonal_chain(f=f, a=0, b=1, eps=eps, get_L=lambda *args, **kwargs: 3.64) # max deriv
 
     atol = get_y_abs_tol(f=f, x=LECTURE_MIN.x, eps=eps)
 
