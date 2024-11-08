@@ -277,3 +277,21 @@ def newton(fd1: Callable[[Any], Any], fd2: Callable[[Any], Any],
     raise ValueError(f"The method didn't achieve the specified ε after the max iteration: №{i} with x0: {x0}, ε: {eps}, τ: {tau}, μ: {mu}")
 
   return Point(x=x, y=y)
+
+def polygonal_chain(f: Callable[[Any], Any], a, b, eps, get_L):
+  assert a <= b
+  assert eps > 0
+
+  L = get_L(f=f, a=a, b=b, eps=eps)
+  pairs = [Point(x=1/(2*L) * (f(a) - f(b) + L * (a + b)), y=1/2 * (f(a) + f(b) + L * (a - b)))]
+
+  while True:
+    star_pair = min(pairs, key=lambda point: point.y)
+    f_star = f(star_pair.x)
+    delta = 1 / (2*L) * (f_star - star_pair.y)
+    if 2 * L * delta <= eps:
+      return Point(x=star_pair.x, y=f_star)
+
+    p = 1 / 2 * (f_star + star_pair.y)
+    pairs.append(Point(x=star_pair.x - delta, y=p))
+    pairs.append(Point(x=star_pair.x + delta, y=p))
