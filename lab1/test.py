@@ -71,6 +71,40 @@ class TestBruteFroce(unittest.TestCase):
         self.assertTrue(math.isclose(expected_points[i].x, actual_points[i].x))
         self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_points[i].y, abs_tol=1e-2))
 
+  def multi_f1(self, x):
+    return math.cos(x) / x**2
+  def multi_f2(self, x):
+    return 1 / 10 * x + 2 * math.sin(4*x)
+
+  MULTI_F1_MIN_POINT = Point(x=2.45871, y=-0.128325)
+  MULTI_F2_MIN_POINT = Point(x=1.1750, y=-1.8823)
+
+  def test_multimodal1(self):
+      f = self.multi_f1
+      eps = 0.1
+      a, b = 1, 12
+
+      actual_xy = brute_force(f=f, a=a, b=b, eps=eps)
+      min_point = self.MULTI_F1_MIN_POINT
+
+      atol = get_y_abs_tol(f=f, x=min_point.x, eps=eps)
+
+      self.assertTrue(math.isclose(a=actual_xy.x, b=min_point.x, abs_tol=eps))
+      self.assertTrue(math.isclose(a=actual_xy.y, b=min_point.y, abs_tol=atol))
+
+  def test_multimodal2(self):
+      f = self.multi_f2
+      eps = 0.1
+      a, b = 0, 4
+
+      actual_xy = brute_force(f=f, a=a, b=b, eps=eps)
+      min_point = self.MULTI_F2_MIN_POINT
+
+      atol = get_y_abs_tol(f=f, x=min_point.x, eps=eps)
+
+      self.assertTrue(math.isclose(a=actual_xy.x, b=min_point.x, abs_tol=eps))
+      self.assertTrue(math.isclose(a=actual_xy.y, b=min_point.y, abs_tol=atol))
+
 class TestBitwiseSearch(unittest.TestCase):
   def test_lecture_min(self):
     test_lecture_min(test_obj=self, method=bitwise_search, eps=0.1)
