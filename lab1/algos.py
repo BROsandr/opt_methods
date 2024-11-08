@@ -289,7 +289,7 @@ def polygonal_chain(f: Callable[[Any], Any], a, b, eps, get_L):
     star_pair = pairs.pop(np.argmin([pair.y for pair in pairs]))
     f_star = f(star_pair.x)
     delta = 1 / (2*L) * (f_star - star_pair.y)
-    if 2 * L * abs(delta) <= eps:
+    if 2 * L * delta <= eps:
       return Point(x=star_pair.x, y=f_star)
 
     p = 1 / 2 * (f_star + star_pair.y)
