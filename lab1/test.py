@@ -8,7 +8,7 @@ from utils import Point, LogPointsWrap
 from plot import *
 
 def should_draw(test_case: unittest.TestCase)->bool:
-  return True
+  return False
 
 def get_y_abs_tol(f: Callable, x, eps):
   assert eps > 0
@@ -70,6 +70,40 @@ class TestBruteFroce(unittest.TestCase):
       with self.subTest(i=i):
         self.assertTrue(math.isclose(expected_points[i].x, actual_points[i].x))
         self.assertTrue(math.isclose(a=expected_points[i].y, b=actual_points[i].y, abs_tol=1e-2))
+
+  def multi_f1(self, x):
+    return math.cos(x) / x**2
+  def multi_f2(self, x):
+    return 1 / 10 * x + 2 * math.sin(4*x)
+
+  MULTI_F1_MIN_POINT = Point(x=2.45871, y=-0.128325)
+  MULTI_F2_MIN_POINT = Point(x=1.1750, y=-1.8823)
+
+  def test_multimodal1(self):
+      f = self.multi_f1
+      eps = 0.1
+      a, b = 1, 12
+
+      actual_xy = brute_force(f=f, a=a, b=b, eps=eps)
+      min_point = self.MULTI_F1_MIN_POINT
+
+      atol = get_y_abs_tol(f=f, x=min_point.x, eps=eps)
+
+      self.assertTrue(math.isclose(a=actual_xy.x, b=min_point.x, abs_tol=eps))
+      self.assertTrue(math.isclose(a=actual_xy.y, b=min_point.y, abs_tol=atol))
+
+  def test_multimodal2(self):
+      f = self.multi_f2
+      eps = 0.1
+      a, b = 0, 4
+
+      actual_xy = brute_force(f=f, a=a, b=b, eps=eps)
+      min_point = self.MULTI_F2_MIN_POINT
+
+      atol = get_y_abs_tol(f=f, x=min_point.x, eps=eps)
+
+      self.assertTrue(math.isclose(a=actual_xy.x, b=min_point.x, abs_tol=eps))
+      self.assertTrue(math.isclose(a=actual_xy.y, b=min_point.y, abs_tol=atol))
 
 class TestBitwiseSearch(unittest.TestCase):
   def test_lecture_min(self):
@@ -470,6 +504,51 @@ class TestNewtonRaphson(unittest.TestCase):
     self.assertAlmostEqual(expected_points[2].x, actual_points[2].x, places=3)
     self.assertAlmostEqual(expected_points[3].x, actual_points[3].x, places=4)
     self.assertAlmostEqual(expected_points[4].x, actual_points[4].x, places=4)
+
+class TestPolygonal(unittest.TestCase):
+  def test_lecture_min(self):
+    f = f_lecture
+    eps = 0.1
+
+    actual_xy = polygonal_chain(f=f, a=0, b=1, eps=eps, get_L=lambda *args, **kwargs: 3.64) # max deriv
+
+    atol = get_y_abs_tol(f=f, x=LECTURE_MIN.x, eps=eps)
+
+    self.assertTrue(math.isclose(a=actual_xy.x, b=LECTURE_MIN.x, abs_tol=eps))
+    self.assertTrue(math.isclose(a=actual_xy.y, b=LECTURE_MIN.y, abs_tol=atol))
+
+  def multi_f1(self, x):
+    return math.cos(x) / x**2
+  def multi_f2(self, x):
+    return 1 / 10 * x + 2 * math.sin(4*x)
+
+  MULTI_F1_MIN_POINT = Point(x=2.45871, y=-0.128325)
+  MULTI_F2_MIN_POINT = Point(x=1.1750, y=-1.8823)
+
+  def test_multimodal1(self):
+      f = self.multi_f1
+      eps = 0.1
+      a, b = 1, 12
+
+      actual_xy = polygonal_chain(f=f, a=a, b=b, eps=eps, get_L=lambda *args, **kwargs: 0.5)
+      min_point = self.MULTI_F1_MIN_POINT
+
+      self.assertTrue(math.isclose(a=actual_xy.x, b=min_point.x, rel_tol=0.1))
+      self.assertTrue(math.isclose(a=actual_xy.y, b=min_point.y, abs_tol=eps))
+
+  def test_multimodal2(self):
+      f = self.multi_f2
+      eps = 0.1
+      a, b = 0, 4
+
+      actual_xy = polygonal_chain(f=f, a=a, b=b, eps=eps, get_L=lambda *args, **kwargs: 82/10)
+      min_point = self.MULTI_F2_MIN_POINT
+
+      atol = get_y_abs_tol(f=f, x=min_point.x, eps=eps)
+
+      self.assertTrue(math.isclose(a=actual_xy.x, b=min_point.x, abs_tol=eps))
+      self.assertTrue(math.isclose(a=actual_xy.y, b=min_point.y, abs_tol=atol))
+
 
 if __name__ == '__main__':
     unittest.main()
